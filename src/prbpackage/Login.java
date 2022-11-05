@@ -8,8 +8,10 @@ import java.awt.Image;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 /**
@@ -222,7 +224,9 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCerrarMouseClicked
 
     private void lblRegistrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegistrarMouseClicked
-        
+        JFrame registro =new VtnRegistro();
+        registro.setVisible(true);
+        setVisible(false);
     }//GEN-LAST:event_lblRegistrarMouseClicked
 
     private void lblIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIngresarMouseClicked
