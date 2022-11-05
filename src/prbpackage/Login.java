@@ -173,7 +173,7 @@ public class Login extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Arial", 2, 12)); // NOI18N
         jLabel1.setText("Registrar");
-        pnContenedor.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 100, -1, -1));
+        pnContenedor.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 100, 60, -1));
         pnContenedor.add(txtLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, -20, 360, 290));
 
         lblIngresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
