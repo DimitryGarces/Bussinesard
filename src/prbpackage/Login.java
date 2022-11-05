@@ -81,6 +81,7 @@ public class Login extends javax.swing.JFrame {
 
         pnHead.setBackground(new java.awt.Color(102, 102, 102));
 
+        txtEncabezado.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         txtEncabezado.setText("BUSINESSCARD");
 
         txtCerrar.setText("Cerrar");
@@ -98,20 +99,14 @@ public class Login extends javax.swing.JFrame {
         pnHeadLayout.setHorizontalGroup(
             pnHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnHeadLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtEncabezado)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 333, Short.MAX_VALUE)
-                .addComponent(txtCerrar)
-                .addGap(15, 15, 15))
+                .addComponent(txtEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 169, Short.MAX_VALUE)
+                .addComponent(txtCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnHeadLayout.setVerticalGroup(
             pnHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnHeadLayout.createSequentialGroup()
-                .addGap(9, 9, 9)
-                .addGroup(pnHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtEncabezado)
-                    .addComponent(txtCerrar))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(txtCerrar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(txtEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
         txtCerrar.getAccessibleContext().setAccessibleName("txtcerrar");
@@ -127,18 +122,15 @@ public class Login extends javax.swing.JFrame {
         pnContactoLayout.setHorizontalGroup(
             pnContactoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnContactoLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(txtContac)
-                .addContainerGap(397, Short.MAX_VALUE))
+                .addComponent(txtContac, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 323, Short.MAX_VALUE))
         );
         pnContactoLayout.setVerticalGroup(
             pnContactoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnContactoLayout.createSequentialGroup()
-                .addComponent(txtContac)
-                .addGap(0, 14, Short.MAX_VALUE))
+            .addComponent(txtContac, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
         );
 
-        pnContenedor.add(pnContacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 470, 30));
+        pnContenedor.add(pnContacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 410, 470, 50));
 
         lblUsuario.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         lblUsuario.setText("Usuario:");
@@ -196,9 +188,7 @@ public class Login extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(pnContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 465, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
