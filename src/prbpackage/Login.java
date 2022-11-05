@@ -27,7 +27,8 @@ public class Login extends javax.swing.JFrame {
     public Login() {
         initComponents();
         pintarImagen(txtLogo, "src/imgspackage/BusinessCard.png");
-        pintarImagen(txtIngresarImg, "src/imgspackage/usuario.png");
+        pintarImagen(lblIngresar, "src/imgspackage/usuario.png");
+        pintarImagen(lblRegistrar, "src/imgspackage/registro.png");
     }
 
     private void pintarImagen(JLabel lbl, String ruta){
@@ -62,9 +63,11 @@ public class Login extends javax.swing.JFrame {
         txtUsuario = new javax.swing.JTextField();
         lblContraseña = new javax.swing.JLabel();
         txtIngresar = new javax.swing.JLabel();
-        txtIngresarImg = new javax.swing.JLabel();
+        lblRegistrar = new javax.swing.JLabel();
         txtContrasena = new javax.swing.JPasswordField();
+        jLabel1 = new javax.swing.JLabel();
         txtLogo = new javax.swing.JLabel();
+        lblIngresar = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -80,6 +83,7 @@ public class Login extends javax.swing.JFrame {
 
         txtCerrar.setText("Cerrar");
         txtCerrar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
+        txtCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtCerrar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
         txtCerrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -151,7 +155,14 @@ public class Login extends javax.swing.JFrame {
             }
         });
         pnContenedor.add(txtIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, -1, -1));
-        pnContenedor.add(txtIngresarImg, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, 60, 50));
+
+        lblRegistrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblRegistrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblRegistrarMouseClicked(evt);
+            }
+        });
+        pnContenedor.add(lblRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 50, 50, 50));
 
         txtContrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -159,7 +170,19 @@ public class Login extends javax.swing.JFrame {
             }
         });
         pnContenedor.add(txtContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 270, 190, 30));
+
+        jLabel1.setFont(new java.awt.Font("Arial", 2, 12)); // NOI18N
+        jLabel1.setText("Registrar");
+        pnContenedor.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 100, -1, -1));
         pnContenedor.add(txtLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, -20, 360, 290));
+
+        lblIngresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblIngresarMouseClicked(evt);
+            }
+        });
+        pnContenedor.add(lblIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, 60, 50));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -197,6 +220,14 @@ public class Login extends javax.swing.JFrame {
         setVisible(false);
         dispose();
     }//GEN-LAST:event_txtCerrarMouseClicked
+
+    private void lblRegistrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegistrarMouseClicked
+        
+    }//GEN-LAST:event_lblRegistrarMouseClicked
+
+    private void lblIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIngresarMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lblIngresarMouseClicked
 
     public boolean valida(String cor, String con) {
         //Crea conexion y guarda correos en una lista o arreglo
@@ -252,7 +283,10 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblContraseña;
+    private javax.swing.JLabel lblIngresar;
+    private javax.swing.JLabel lblRegistrar;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JPanel pnContacto;
     private javax.swing.JPanel pnContenedor;
@@ -262,7 +296,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPasswordField txtContrasena;
     private javax.swing.JLabel txtEncabezado;
     private javax.swing.JLabel txtIngresar;
-    private javax.swing.JLabel txtIngresarImg;
     private javax.swing.JLabel txtLogo;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
