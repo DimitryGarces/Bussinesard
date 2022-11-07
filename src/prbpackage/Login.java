@@ -10,9 +10,10 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
+
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import org.mariadb.jdbc.Connection;
 
 /**
  *
@@ -22,6 +23,31 @@ public class Login extends javax.swing.JFrame {
 
     private ImageIcon imagen;
     private Icon icono;
+     private static Connection con;
+    // Declaramos los datos de conexion a la bd
+    private static final String driver="org.mariadb.jdbc.Driver";
+    private static final String user="root";
+    private static final String pass="root";
+    private static final String url="jdbc:mariadb://localhost:3305/bussinesscard";
+    public void conector() {
+        // Reseteamos a null la conexion a la bd
+        con=null;
+        try{
+            Class.forName(driver);
+            // Nos conectamos a la bd
+            con= (Connection) DriverManager.getConnection(url, user, pass);
+            // Si la conexion fue exitosa mostramos un mensaje de conexion exitosa
+            if (con!=null){
+                lbStatus.setText("Estatus: Correcto");
+            }
+        }
+        // Si la conexion NO fue exitosa mostramos un mensaje de error
+        catch (ClassNotFoundException | SQLException e){
+           lbStatus.setText("Estatus: Incorrecto" + e);
+           
+        }
+    }                 
+    
     
     /**
      * Creates new form Login
@@ -31,6 +57,7 @@ public class Login extends javax.swing.JFrame {
         pintarImagen(txtLogo, "src/imgspackage/BusinessCard.png");
         pintarImagen(lblIngresar, "src/imgspackage/usuario.png");
         pintarImagen(lblRegistrar, "src/imgspackage/registro.png");
+        conector();
     }
 
     private void pintarImagen(JLabel lbl, String ruta){
@@ -70,6 +97,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         txtLogo = new javax.swing.JLabel();
         lblIngresar = new javax.swing.JLabel();
+        lbStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
@@ -178,6 +206,9 @@ public class Login extends javax.swing.JFrame {
         });
         pnContenedor.add(lblIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 340, 60, 50));
 
+        lbStatus.setText("Status: ");
+        pnContenedor.add(lbStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 380, -1, -1));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -199,7 +230,8 @@ public class Login extends javax.swing.JFrame {
         String correo = txtUsuario.getText();
         String contra = txtContrasena.getText();
 
-        if (valida(correo, contra)) {
+        
+        if (valida(correo, contra) ) {
             //crear nuevo frame
         }
     }//GEN-LAST:event_txtIngresarMouseClicked
@@ -278,6 +310,7 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lbStatus;
     private javax.swing.JLabel lblContraseña;
     private javax.swing.JLabel lblIngresar;
     private javax.swing.JLabel lblRegistrar;
