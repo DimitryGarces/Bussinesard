@@ -17,38 +17,37 @@ import org.mariadb.jdbc.Connection;
 
 /**
  *
- * 
+ *
  */
 public class Login extends javax.swing.JFrame {
 
     private ImageIcon imagen;
     private Icon icono;
-     private static Connection con;
+    private static Connection con;
     // Declaramos los datos de conexion a la bd
-    private static final String driver="org.mariadb.jdbc.Driver";
-    private static final String user="root";
-    private static final String pass="root";
-    private static final String url="jdbc:mariadb://localhost:3305/bussinesscard";
+    private static final String driver = "org.mariadb.jdbc.Driver";
+    private static final String user = "root";
+    private static final String pass = "root";
+    private static final String url = "jdbc:mariadb://localhost:3305/bussinesscard";
+
     public void conector() {
         // Reseteamos a null la conexion a la bd
-        con=null;
-        try{
+        con = null;
+        try {
             Class.forName(driver);
             // Nos conectamos a la bd
-            con= (Connection) DriverManager.getConnection(url, user, pass);
+            con = (Connection) DriverManager.getConnection(url, user, pass);
             // Si la conexion fue exitosa mostramos un mensaje de conexion exitosa
-            if (con!=null){
+            if (con != null) {
                 lbStatus.setText("Estatus: Correcto");
             }
+        } // Si la conexion NO fue exitosa mostramos un mensaje de error
+        catch (ClassNotFoundException | SQLException e) {
+            lbStatus.setText("Estatus: Incorrecto" + e);
+
         }
-        // Si la conexion NO fue exitosa mostramos un mensaje de error
-        catch (ClassNotFoundException | SQLException e){
-           lbStatus.setText("Estatus: Incorrecto" + e);
-           
-        }
-    }                 
-    
-    
+    }
+
     /**
      * Creates new form Login
      */
@@ -56,23 +55,22 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         pintarImagen(txtLogo, "src/imgspackage/BusinessCard.png");
         pintarImagen(lblIngresar, "src/imgspackage/usuario.png");
-        pintarImagen(lblRegistrar, "src/imgspackage/registro.png");
         conector();
     }
 
-    private void pintarImagen(JLabel lbl, String ruta){
+    private void pintarImagen(JLabel lbl, String ruta) {
         this.imagen = new ImageIcon(ruta);
         this.icono = new ImageIcon(
                 this.imagen.getImage().getScaledInstance(
-                        lbl.getWidth(), 
-                        lbl.getHeight(), 
+                        lbl.getWidth(),
+                        lbl.getHeight(),
                         Image.SCALE_DEFAULT
                 )
         );
         lbl.setIcon(this.icono);
         this.repaint();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -92,9 +90,7 @@ public class Login extends javax.swing.JFrame {
         txtUsuario = new javax.swing.JTextField();
         lblContraseña = new javax.swing.JLabel();
         txtIngresar = new javax.swing.JLabel();
-        lblRegistrar = new javax.swing.JLabel();
         txtContrasena = new javax.swing.JPasswordField();
-        jLabel1 = new javax.swing.JLabel();
         txtLogo = new javax.swing.JLabel();
         lblIngresar = new javax.swing.JLabel();
         lbStatus = new javax.swing.JLabel();
@@ -178,24 +174,12 @@ public class Login extends javax.swing.JFrame {
         });
         pnContenedor.add(txtIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, -1, -1));
 
-        lblRegistrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblRegistrar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblRegistrarMouseClicked(evt);
-            }
-        });
-        pnContenedor.add(lblRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 50, 50, 50));
-
         txtContrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtContrasenaActionPerformed(evt);
             }
         });
         pnContenedor.add(txtContrasena, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 270, 190, 30));
-
-        jLabel1.setFont(new java.awt.Font("Arial", 2, 12)); // NOI18N
-        jLabel1.setText("Registrar");
-        pnContenedor.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 100, 60, -1));
         pnContenedor.add(txtLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, -20, 360, 290));
 
         lblIngresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -230,8 +214,7 @@ public class Login extends javax.swing.JFrame {
         String correo = txtUsuario.getText();
         String contra = txtContrasena.getText();
 
-        
-        if (valida(correo, contra) ) {
+        if (valida(correo, contra)) {
             //crear nuevo frame
         }
     }//GEN-LAST:event_txtIngresarMouseClicked
@@ -244,12 +227,6 @@ public class Login extends javax.swing.JFrame {
         setVisible(false);
         dispose();
     }//GEN-LAST:event_txtCerrarMouseClicked
-
-    private void lblRegistrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblRegistrarMouseClicked
-        JFrame registro =new VtnRegistro();
-        registro.setVisible(true);
-        setVisible(false);
-    }//GEN-LAST:event_lblRegistrarMouseClicked
 
     private void lblIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIngresarMouseClicked
         // TODO add your handling code here:
@@ -309,11 +286,9 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lbStatus;
     private javax.swing.JLabel lblContraseña;
     private javax.swing.JLabel lblIngresar;
-    private javax.swing.JLabel lblRegistrar;
     private javax.swing.JLabel lblUsuario;
     private javax.swing.JPanel pnContacto;
     private javax.swing.JPanel pnContenedor;
