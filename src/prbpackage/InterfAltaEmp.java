@@ -4,27 +4,36 @@
  */
 package prbpackage;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.mariadb.jdbc.Connection;
+import java.sql.PreparedStatement;
+
 /**
  *
  * @author Diego
  */
 public class InterfAltaEmp extends javax.swing.JFrame {
 
+    private static Connection con = null;
 //Simple borders
+
     /**
      * Creates new form InterfAltaEmp
+     *
+     * @param con
      */
-    public InterfAltaEmp() {
+    public InterfAltaEmp(Connection con) {
         initComponents();
         cbGrupo = new prbpackage.Combobox();
-        cbGrupo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "","Alfa", "Beta", "Foxtron"}));
+        cbGrupo.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"", "Alfa", "Beta", "Foxtron"}));
         cbRol = new prbpackage.Combobox();
-        cbRol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "","Administrador", "Moderador", "Empleado"}));
-        
+        cbRol.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"", "Administrador", "Moderador", "Empleado"}));
 
         this.pnContainer.add(cbGrupo, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 120, -1, -1));
         this.pnContainer.add(cbRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 180, -1, -1));
-
+        this.con = con;
     }
 
     /**
@@ -59,8 +68,13 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         pnValidar = new javax.swing.JPanel();
         lbValidar = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registrar");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowDeactivated(java.awt.event.WindowEvent evt) {
+                formWindowDeactivated(evt);
+            }
+        });
 
         pnContainer.setBackground(new java.awt.Color(255, 255, 255));
         pnContainer.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -166,6 +180,11 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         pnValidar.setBackground(new java.awt.Color(204, 204, 204));
 
         lbValidar.setText("Validar");
+        lbValidar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbValidarMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnValidarLayout = new javax.swing.GroupLayout(pnValidar);
         pnValidar.setLayout(pnValidarLayout);
@@ -203,6 +222,44 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCorreoActionPerformed
 
+    private void lbValidarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbValidarMouseClicked
+
+        String correo = txtCorreo.getText();
+        String contra = txtContrasenia.getText();
+        String apellidos = txtApellidos.getText();
+        String nombre = txtNombre.getText();
+        String telefono = txtTelefono.getText();
+        int grupo = cbGrupo.getSelectedIndex();
+        int rol = cbRol.getSelectedIndex();
+        try {
+            PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`empleado` (`Id_Empleado`, `Role`,`Apellidos`,`Nombre`,`Telefono`,`Usuario`,`Contraseña`,`Id_Grupo`)"
+                    + "Values (?,?,?,?,?,?,?,?)");
+            pps.setString(1, "4");
+            pps.setString(2, Integer.toString(rol));
+            pps.setString(3, apellidos);
+            pps.setString(4, nombre);
+            pps.setString(5, telefono);
+            pps.setString(6, correo);
+            pps.setString(7, contra);
+            pps.setString(8, Integer.toString(grupo));
+            pps.executeUpdate();
+            txtCorreo.setText("");
+            txtContrasenia.setText("");
+            txtApellidos.setText("");
+            txtNombre.setText("");
+            txtTelefono.setText("");
+        } catch (SQLException ex) {
+            Logger.getLogger(InterfAltaEmp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbValidarMouseClicked
+
+    private void formWindowDeactivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowDeactivated
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowDeactivated
+
     /**
      * @param args the command line arguments
      */
@@ -233,7 +290,7 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfAltaEmp().setVisible(true);
+                new InterfAltaEmp(con).setVisible(true);
             }
         });
     }

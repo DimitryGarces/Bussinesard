@@ -8,12 +8,15 @@ import java.awt.Image;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.mariadb.jdbc.Connection;
+import org.mariadb.jdbc.Statement;
 
 /**
  *
@@ -29,6 +32,10 @@ public class Login extends javax.swing.JFrame {
     private static final String user = "root";
     private static final String pass = "root";
     private static final String url = "jdbc:mariadb://localhost:3305/bussinesscard";
+
+    String sql = "Select * from bussinesscard.empleado";
+    Statement st;
+    int i;
 
     public void conector() {
         // Reseteamos a null la conexion a la bd
@@ -165,7 +172,7 @@ public class Login extends javax.swing.JFrame {
         lblContraseña.setText("Contraseña:");
         pnContenedor.add(lblContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, -1, -1));
 
-        txtIngresar.setFont(new java.awt.Font("Arial", 2, 12)); // NOI18N
+        txtIngresar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         txtIngresar.setText("Ingresar");
         txtIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -211,12 +218,7 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtIngresarMouseClicked
-        String correo = txtUsuario.getText();
-        String contra = txtContrasena.getText();
 
-        if (valida(correo, contra)) {
-            //crear nuevo frame
-        }
     }//GEN-LAST:event_txtIngresarMouseClicked
 
     private void txtContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtContrasenaActionPerformed
@@ -229,25 +231,41 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCerrarMouseClicked
 
     private void lblIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIngresarMouseClicked
-        // TODO add your handling code here:
+
+        String correo = txtUsuario.getText();
+        char[] arrayC = txtContrasena.getPassword();
+        String contra = new String(arrayC);
+        if (valida(correo, contra)) {
+            InterfEmpleados interf = new InterfEmpleados(con);
+            interf.setVisible(true);
+            this.setVisible(false);
+        } else if (i == 0) {
+            JOptionPane.showMessageDialog(null, "No hay usuarios con acceso al sistema"
+                    + "\nPor favor, contacte a un Administrador");
+        } else {
+            JOptionPane.showMessageDialog(null, "Compruebe sus datos ingresados\nSi cree que hay un error\n"
+                    + "Por favor, contacte a un Administrador");
+        }
     }//GEN-LAST:event_lblIngresarMouseClicked
 
-    public boolean valida(String cor, String con) {
-        //Crea conexion y guarda correos en una lista o arreglo
-        ArrayList<String> correos = new ArrayList<String>();
-        ArrayList<String> contra = new ArrayList<String>();
-        //Ya se que actualmente estara vacia pero por algo se hara el llenado antes:b
-        boolean v = false;
-        int i = 0;
-        if (correos != null) {
-            do {
-                if (correos.get(i).equals(cor)
-                        && contra.get(i).equals(con)) {
-                    v = true;
+    public boolean valida(String cor, String cont) {
+        i = 0;
+        try {
+            st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                if (rs.getString(6).equals(cor)
+                        && rs.getString(7).equals(cont)) {
+                    return true;
                 }
-            } while (i != correos.size() - 1);
+                i++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return v;
+        txtUsuario.setText("");
+        txtContrasena.setText("");
+        return false;
     }
 
     /**
@@ -264,16 +282,24 @@ public class Login extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

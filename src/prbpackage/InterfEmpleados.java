@@ -4,18 +4,42 @@
  */
 package prbpackage;
 
+import java.awt.Image;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import org.mariadb.jdbc.Connection;
 
 /**
  *
  * @author Diego
  */
 public class InterfEmpleados extends javax.swing.JFrame {
+    
+    private ImageIcon imagen;
+    private Icon icono;
+    private static Connection con = null;
 
     /**
      * Creates new form InterfEmpleados
      */
-    public InterfEmpleados() {
+    public InterfEmpleados(Connection con) {
         initComponents();
+        this.con = con;
+        pintarImagen(lbRegistrar, "src/imgspackage/registro.png");
+    }
+    
+    private void pintarImagen(JLabel lbl, String ruta) {
+        this.imagen = new ImageIcon(ruta);
+        this.icono = new ImageIcon(
+                this.imagen.getImage().getScaledInstance(
+                        lbl.getWidth(),
+                        lbl.getHeight(),
+                        Image.SCALE_DEFAULT
+                )
+        );
+        lbl.setIcon(this.icono);
+        this.repaint();
     }
 
     /**
@@ -40,6 +64,7 @@ public class InterfEmpleados extends javax.swing.JFrame {
         jList2 = new javax.swing.JList<>();
         pnHead = new javax.swing.JPanel();
         txtEncabezado = new javax.swing.JLabel();
+        lbRegistrar = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mensajes");
@@ -155,6 +180,14 @@ public class InterfEmpleados extends javax.swing.JFrame {
 
         pnContenedor.add(pnHead, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 610, 40));
 
+        lbRegistrar.setText("Registrar");
+        lbRegistrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbRegistrarMouseClicked(evt);
+            }
+        });
+        pnContenedor.add(lbRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 40, 40, 30));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -173,6 +206,13 @@ public class InterfEmpleados extends javax.swing.JFrame {
     private void txtMensajeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMensajeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtMensajeActionPerformed
+
+    private void lbRegistrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRegistrarMouseClicked
+        InterfAltaEmp interf = new InterfAltaEmp(con);
+        interf.setVisible(true);
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbRegistrarMouseClicked
 
     /**
      * @param args the command line arguments
@@ -204,7 +244,7 @@ public class InterfEmpleados extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfEmpleados().setVisible(true);
+                new InterfEmpleados(con).setVisible(true);
             }
         });
     }
@@ -217,6 +257,7 @@ public class InterfEmpleados extends javax.swing.JFrame {
     private javax.swing.JList<String> jList2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lbRegistrar;
     private javax.swing.JPanel pnContactos;
     private javax.swing.JPanel pnContenedor;
     private javax.swing.JPanel pnHead;
