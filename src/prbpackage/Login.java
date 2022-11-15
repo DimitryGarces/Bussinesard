@@ -34,6 +34,7 @@ public class Login extends javax.swing.JFrame {
     private static final String url = "jdbc:mariadb://localhost:3305/bussinesscard";
 
     String sql = "Select * from bussinesscard.empleado";
+    String nombreU;
     Statement st;
     int i;
 
@@ -236,7 +237,7 @@ public class Login extends javax.swing.JFrame {
         char[] arrayC = txtContrasena.getPassword();
         String contra = new String(arrayC);
         if (valida(correo, contra)) {
-            InterfEmpleados interf = new InterfEmpleados(con);
+            InterfEmpleados interf = new InterfEmpleados(con, nombreU);
             interf.setVisible(true);
             this.setVisible(false);
         } else if (i == 0) {
@@ -256,6 +257,7 @@ public class Login extends javax.swing.JFrame {
             while (rs.next()) {
                 if (rs.getString(6).equals(cor)
                         && rs.getString(7).equals(cont)) {
+                    nombreU = rs.getString(4);
                     return true;
                 }
                 i++;
