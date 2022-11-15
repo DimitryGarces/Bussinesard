@@ -34,7 +34,7 @@ public class Login extends javax.swing.JFrame {
     private static final String url = "jdbc:mariadb://localhost:3305/bussinesscard";
 
     String sql = "Select * from bussinesscard.empleado";
-    String nombreU;
+    String nombreU ="";
     Statement st;
     int i;
 

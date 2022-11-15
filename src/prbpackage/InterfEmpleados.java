@@ -1,6 +1,7 @@
 package prbpackage;
 
 import java.awt.Image;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -8,6 +9,7 @@ import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import org.mariadb.jdbc.Connection;
 import org.mariadb.jdbc.Statement;
 
@@ -27,7 +29,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             + " WHERE Nombre LIKE ";
     Statement st;
     int i;
-    private String arr[]=null;
+    String O, D;
+    private String arr[] = null;
 
     /**
      * Creates new form InterfEmpleados
@@ -40,38 +43,38 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         this.con = con;
         this.nombreU = nombre;
         pintarImagen(lbRegistrar, "src/imgspackage/registro.png");
-        txtMensaje.setText("Hola " + nombreU + " ! ");
+        lbMsjBienvenida.setText("Hola " + nombreU + " ! ");
         valida();
     }
 
     public void valida() {
         i = 0;
-        sqlContactos += " ' " + nombreU + " ' ;";
+        sqlContactos += " \"" + nombreU + "\";";
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlContactos);
             while (rs.next()) {
-                inserta(rs.getString(4));
+                inserta(rs.getString(1));
                 i++;
             }
 
+            listContactos.setModel(new javax.swing.AbstractListModel<String>() {
+
+                String[] strings = arr;
+
+                public int getSize() {
+                    return strings.length;
+                }
+
+                public String getElementAt(int i) {
+                    return strings[i];
+                }
+
+            });
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-        listContactos.setModel(new javax.swing.AbstractListModel<String>() {
 
-            String[] strings = arr;
-
-            @Override
-            public int getSize() {
-                throw new UnsupportedOperationException("Not supported yet."); 
-            }
-
-            @Override
-            public String getElementAt(int index) {
-                throw new UnsupportedOperationException("Not supported yet.");
-            }
-        });
     }
 
     public void inserta(String a) {
@@ -292,16 +295,19 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
     private void listContactosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listContactosMouseClicked
 
+        O=D="";
         String selected = listContactos.getSelectedValue();
         arr = null;
-        sqlMensajes += selected + " AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
-                + "WHERE Nombre LIKE " + nombreU + ") ORDER BY Fecha ASC; ";
+        sqlMensajes += "\"" + selected + "\" AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
+                + "WHERE Nombre LIKE \"" + nombreU + "\") ORDER BY Fecha DESC; ";
         i = 0;
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlMensajes);
             while (rs.next()) {
                 inserta(rs.getString(4));
+                O=rs.getString(1);
+                D=rs.getString(2);
             }
             i++;
         } catch (SQLException ex) {
@@ -311,25 +317,34 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             listMensajes.setModel(new javax.swing.AbstractListModel<String>() {
                 String[] strings = arr;
 
-                @Override
                 public int getSize() {
-                    throw new UnsupportedOperationException("Not supported yet.");
+                    return strings.length;
                 }
 
-                @Override
-                public String getElementAt(int index) {
-                    throw new UnsupportedOperationException("Not supported yet.");
+                public String getElementAt(int i) {
+                    return strings[i];
                 }
-
             });
+        }else{
+            JOptionPane.showMessageDialog(null,"Inicia una conversacion!");
         }
 
     }//GEN-LAST:event_listContactosMouseClicked
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-//INSERT INTO `bussinesscard`.`mensaje`(`Id_Mensaje`,`Id_Empleado_O`,`Id_Empleado_D`,`Fecha`,`Mensaje`,`Ruta_Arch`) VALUES
-//(1,1,2,GETDATE(),'Prueba uno',null);
-        // TODO add your handling code here:
+
+        try {
+            PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`mensaje` (`Id_Empleado_O`,`Id_Empleado_D`,`Fecha`,`Mensaje`,`Ruta_Arch`)"
+                    + "Values (?,?,?,?,?)");
+            pps.setString(1, O);
+            pps.setString(2, D);
+            pps.setString(3, "\"GETDATE()\"");
+            pps.setString(4, txtMensaje.getText());
+            pps.setString(5, "");
+        }catch(SQLException ex){
+            Logger.getLogger(InterfAltaEmp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void lbRecargarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbRecargarMouseClicked
