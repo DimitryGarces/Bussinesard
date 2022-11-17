@@ -42,7 +42,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         initComponents();
         this.con = con;
         this.nombreU = nombre;
-        pintarImagen(lbRegistrar, "src/imgspackage/registro.png");
+        pintarImagen(lbRegistrar, "/imgspackage/registro.png");
         lbMsjBienvenida.setText("Hola " + nombreU + " ! ");
         valida();
     }
@@ -90,7 +90,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     }
 
     private void pintarImagen(JLabel lbl, String ruta) {
-        this.imagen = new ImageIcon(ruta);
+        this.imagen = new ImageIcon(getClass().getResource(ruta));
         this.icono = new ImageIcon(
                 this.imagen.getImage().getScaledInstance(
                         lbl.getWidth(),
@@ -163,8 +163,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         pnContactosLayout.setVerticalGroup(
             pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnContactosLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(lbRecargar)
                 .addContainerGap(20, Short.MAX_VALUE))
@@ -224,8 +224,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         pnMensajesLayout.setVerticalGroup(
             pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMensajesLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                .addContainerGap(21, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
@@ -236,7 +236,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 .addGap(27, 27, 27))
         );
 
-        pnContenedor.add(pnMensajes, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 610, 380));
+        pnContenedor.add(pnMensajes, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 90, 610, 360));
 
         txtEncabezado.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         txtEncabezado.setText("BUSINESSCARD");
@@ -262,7 +262,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 lbRegistrarMouseClicked(evt);
             }
         });
-        pnContenedor.add(lbRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 40, 40, 30));
+        pnContenedor.add(lbRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 40, 60, 50));
 
         lbMsjBienvenida.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lbMsjBienvenida.setText("Hola");
