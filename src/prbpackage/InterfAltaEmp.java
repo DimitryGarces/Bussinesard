@@ -96,6 +96,11 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         txtEncabezado.setText("BUSINESSCARD");
 
         lbCancelar.setText("Cancelar");
+        lbCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbCancelarMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnHeadLayout = new javax.swing.GroupLayout(pnHead);
         pnHead.setLayout(pnHeadLayout);
@@ -232,6 +237,7 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         int grupo = cbGrupo.getSelectedIndex();
         int rol = cbRol.getSelectedIndex();
         try {
+            
             PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`empleado` (`Id_Empleado`, `Role`,`Apellidos`,`Nombre`,`Telefono`,`Usuario`,`Contraseña`,`Id_Grupo`)"
                     + "Values (?,?,?,?,?,?,?,?)");
             pps.setString(1, "4");
@@ -259,6 +265,11 @@ public class InterfAltaEmp extends javax.swing.JFrame {
 
         // TODO add your handling code here:
     }//GEN-LAST:event_formWindowDeactivated
+
+    private void lbCancelarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbCancelarMouseClicked
+        this.dispose();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbCancelarMouseClicked
 
     /**
      * @param args the command line arguments

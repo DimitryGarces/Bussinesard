@@ -6,6 +6,7 @@ package prbpackage;
 
 import java.awt.Color;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -34,13 +35,15 @@ public class Login extends javax.swing.JFrame {
     private static final String pass = "root";
     private static final String url = "jdbc:mariadb://localhost:3305/bussinesscard";
 
-    String sql = "Select * from bussinesscard.empleado", nombreU = "", error = "";
+    String sql = "Select Id_Empleado,role.nombre, Apellidos,empleado.Nombre,Telefono,Usuario,Contraseña,Id_Grupo from bussinesscard.empleado "
+            + "Inner Join bussinesscard.role on Empleado.Role=Role.Id_Role", nombreU = "", error = "", rol = "";
     Statement st;
     int i;
+    boolean mayusAct = false;
 
     public final void conector() {
         // Reseteamos a null la conexion a la bd
-        pnContenedor.add(lbSt, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 500, -1, -1));
+//        pnContenedor.add(lbSt, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 500, -1, -1));
         error = "";
         con = null;
         try {
@@ -50,7 +53,7 @@ public class Login extends javax.swing.JFrame {
             // Si la conexion fue exitosa mostramos un mensaje de conexion exitosa
             if (con != null) {
                 lbSt.setText("Correcto");
-                lbSt.setForeground(Color.getHSBColor(0, 143, 57));
+                lbSt.setForeground(Color.getHSBColor(1, 243, 57));
             }
         } // Si la conexion NO fue exitosa mostramos un mensaje de error
         catch (ClassNotFoundException | SQLException e) {
@@ -66,9 +69,18 @@ public class Login extends javax.swing.JFrame {
 
         pintarImagen(txtLogo, "/imgspackage/BusinessCard.png");
         pintarImagen(lblIngresar, "/imgspackage/usuario.png");
-        pintarImagen(txtCerrar, "/imgspackage/CerrarGris.png");
+        pintarImagen(txtCerrar, "/imgspackage/Cerrar.png");
+        pintarImagen(lbFondoA, "/imgspackage/FondoA.png");
 
         lbErrorAux.setVisible(false);
+        mayusAct = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
+        lbBlockM2.setVisible(false);
+        if (mayusAct) {
+            lbBlocM1.setVisible(true);
+        } else {
+            lbBlocM1.setVisible(false);
+        }
+
         conector();
     }
 //txtLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgspackage/BusinessCard.png")));
@@ -103,27 +115,32 @@ public class Login extends javax.swing.JFrame {
         txtContac = new javax.swing.JLabel();
         lbTelefono = new javax.swing.JLabel();
         lbC = new javax.swing.JLabel();
-        txtIngresar = new javax.swing.JLabel();
         txtLogo = new javax.swing.JLabel();
-        lblIngresar = new javax.swing.JLabel();
         lbStatus = new javax.swing.JLabel();
-        lbSt = new javax.swing.JLabel();
         lbErrorAux = new javax.swing.JLabel();
+        lbSt = new javax.swing.JLabel();
         pn1 = new javax.swing.JPanel();
         txtUsuario = new javax.swing.JTextField();
         lblUsuario = new javax.swing.JLabel();
         lblContraseña = new javax.swing.JLabel();
         txtContrasena = new javax.swing.JPasswordField();
+        lblIngresar = new javax.swing.JLabel();
+        txtIngresar = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        lbBlocM1 = new javax.swing.JLabel();
+        lbBlockM2 = new javax.swing.JLabel();
+        lbFondoA = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
         setUndecorated(true);
         setResizable(false);
 
-        pnContenedor.setBackground(new java.awt.Color(255, 255, 255));
+        pnContenedor.setBackground(new java.awt.Color(255, 153, 51));
         pnContenedor.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        pnHead.setBackground(new java.awt.Color(102, 102, 102));
+        pnHead.setBackground(new java.awt.Color(255, 255, 255));
+        pnHead.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         pnHead.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 pnHeadMouseDragged(evt);
@@ -141,6 +158,7 @@ public class Login extends javax.swing.JFrame {
         txtEncabezado.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtEncabezado.setText("ENTERPRISE MANAGEMENT");
 
+        txtCerrar.setBackground(new java.awt.Color(255, 255, 255));
         txtCerrar.setVerticalAlignment(javax.swing.SwingConstants.BOTTOM);
         txtCerrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         txtCerrar.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
@@ -157,12 +175,12 @@ public class Login extends javax.swing.JFrame {
             .addGroup(pnHeadLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtEncabezado)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 171, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 309, Short.MAX_VALUE)
                 .addComponent(txtCerrar, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnHeadLayout.setVerticalGroup(
             pnHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(txtEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+            .addComponent(txtEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
             .addGroup(pnHeadLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtCerrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -171,9 +189,10 @@ public class Login extends javax.swing.JFrame {
 
         txtCerrar.getAccessibleContext().setAccessibleName("txtcerrar");
 
-        pnContenedor.add(pnHead, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 470, 50));
+        pnContenedor.add(pnHead, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 610, 50));
 
-        pnContacto.setBackground(new java.awt.Color(231, 231, 231));
+        pnContacto.setBackground(new java.awt.Color(255, 255, 255));
+        pnContacto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         txtContac.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         txtContac.setText("Contacto Tecnico");
@@ -196,7 +215,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(lbTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(27, 27, 27)
                         .addComponent(lbC)))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
         pnContactoLayout.setVerticalGroup(
             pnContactoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -207,41 +226,15 @@ public class Login extends javax.swing.JFrame {
                 .addGroup(pnContactoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbTelefono)
                     .addComponent(lbC))
-                .addGap(0, 10, Short.MAX_VALUE))
+                .addGap(0, 8, Short.MAX_VALUE))
         );
 
-        pnContenedor.add(pnContacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 520, 470, 50));
-
-        txtIngresar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        txtIngresar.setText("Ingresar");
-        txtIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txtIngresarMouseClicked(evt);
-            }
-        });
-        pnContenedor.add(txtIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 440, -1, -1));
-        pnContenedor.add(txtLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, -50, 380, 360));
-
-        lblIngresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lblIngresarMouseClicked(evt);
-            }
-        });
-        pnContenedor.add(lblIngresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 390, 60, 50));
+        pnContenedor.add(pnContacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 470, 610, 50));
+        pnContenedor.add(txtLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 140, 210, 170));
 
         lbStatus.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lbStatus.setText("Estatus: ");
-        pnContenedor.add(lbStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 500, -1, -1));
-
-        lbSt.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        lbSt.setText("C");
-        lbSt.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                lbStMouseEntered(evt);
-            }
-        });
-        pnContenedor.add(lbSt, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 500, -1, -1));
+        pnContenedor.add(lbStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 450, -1, -1));
 
         lbErrorAux.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         lbErrorAux.setForeground(new java.awt.Color(255, 0, 0));
@@ -251,20 +244,46 @@ public class Login extends javax.swing.JFrame {
                 lbErrorAuxMouseEntered(evt);
             }
         });
-        pnContenedor.add(lbErrorAux, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 460, 450, 30));
+        pnContenedor.add(lbErrorAux, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 410, 450, 30));
 
+        lbSt.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        lbSt.setText("C");
+        lbSt.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                lbStMouseEntered(evt);
+            }
+        });
+        pnContenedor.add(lbSt, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 450, -1, -1));
+
+        pn1.setBackground(new java.awt.Color(255, 255, 255));
+        pn1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                pn1KeyPressed(evt);
+            }
+        });
+
+        txtUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtUsuarioMouseClicked(evt);
+            }
+        });
         txtUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtUsuarioKeyPressed(evt);
             }
         });
 
-        lblUsuario.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblUsuario.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         lblUsuario.setText("Usuario:");
 
-        lblContraseña.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
+        lblContraseña.setFont(new java.awt.Font("Arial", 1, 16)); // NOI18N
         lblContraseña.setText("Contraseña:");
 
+        txtContrasena.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtContrasenaMouseClicked(evt);
+            }
+        });
         txtContrasena.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtContrasenaActionPerformed(evt);
@@ -276,55 +295,98 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        lblIngresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblIngresarMouseClicked(evt);
+            }
+        });
+
+        txtIngresar.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        txtIngresar.setText("Ingresar");
+        txtIngresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txtIngresarMouseClicked(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 24)); // NOI18N
+        jLabel1.setText("Iniciar Sesión");
+
+        lbBlocM1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lbBlocM1.setForeground(new java.awt.Color(255, 0, 0));
+        lbBlocM1.setText("Block Mayus Activado");
+
+        lbBlockM2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        lbBlockM2.setForeground(new java.awt.Color(255, 0, 0));
+        lbBlockM2.setText("Block Mayus Activado");
+
         javax.swing.GroupLayout pn1Layout = new javax.swing.GroupLayout(pn1);
         pn1.setLayout(pn1Layout);
         pn1Layout.setHorizontalGroup(
             pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pn1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pn1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(lblUsuario)
-                        .addGap(16, 16, 16)
-                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1))
                     .addGroup(pn1Layout.createSequentialGroup()
-                        .addComponent(lblContraseña)
-                        .addGap(13, 13, 13)
-                        .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(44, Short.MAX_VALUE))
+                        .addGap(32, 32, 32)
+                        .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblUsuario)
+                            .addComponent(lbBlockM2)
+                            .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtUsuario, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtContrasena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(lbBlocM1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblContraseña, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(34, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtIngresar))
+                .addGap(117, 117, 117))
         );
         pn1Layout.setVerticalGroup(
             pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pn1Layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pn1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lblUsuario))
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pn1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lblContraseña))
-                    .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(38, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(26, 26, 26)
+                .addComponent(lblUsuario)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addComponent(lbBlocM1)
+                .addGap(12, 12, 12)
+                .addComponent(lblContraseña)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbBlockM2)
+                .addGap(18, 18, 18)
+                .addComponent(lblIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(txtIngresar)
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
-        pnContenedor.add(pn1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 210, 360, 170));
+        pnContenedor.add(pn1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 100, 300, 310));
+        pnContenedor.add(lbFondoA, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 610, 470));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(pnContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(pnContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, 565, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnContenedor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -346,11 +408,14 @@ public class Login extends javax.swing.JFrame {
 
     private void lblIngresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblIngresarMouseClicked
 
+//        InterfEmpleados interf = new InterfEmpleados(con, "Diego");
+//            interf.setVisible(true);
+//            this.setVisible(false);
         String correo = txtUsuario.getText();
         char[] arrayC = txtContrasena.getPassword();
         String contra = new String(arrayC);
         if (valida(correo, contra)) {
-            InterfEmpleados interf = new InterfEmpleados(con, nombreU);
+            InterfEmpleados interf = new InterfEmpleados(con, nombreU, rol);
             interf.setVisible(true);
             this.setVisible(false);
         } else if (i == 0) {
@@ -365,8 +430,18 @@ public class Login extends javax.swing.JFrame {
             if (txtUsuario.getText().equals("")) {
                 JOptionPane.showMessageDialog(null, "Por favor, Llene todos los campos", "Advertencia", JOptionPane.WARNING_MESSAGE);
             } else {
+                if (mayusAct) {
+                    lbBlocM1.setVisible(false);
+                    lbBlockM2.setVisible(true);
+                }
                 txtContrasena.requestFocus();
             }
+        } else if (evt.getKeyCode() == 20 && mayusAct) {
+            lbBlocM1.setVisible(false);
+            mayusAct = false;
+        } else if (evt.getKeyCode() == 20 && !mayusAct) {
+            lbBlocM1.setVisible(true);
+            mayusAct = true;
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_txtUsuarioKeyPressed
@@ -375,15 +450,30 @@ public class Login extends javax.swing.JFrame {
         char[] arrayC = txtContrasena.getPassword();
         String contra = new String(arrayC);
 
-        if (contra.equals("")) {
+        if (evt.getKeyCode() == 20 && mayusAct) {
+            lbBlockM2.setVisible(false);
+            mayusAct = false;
+        } else if (evt.getKeyCode() == 20 && !mayusAct) {
+            lbBlockM2.setVisible(true);
+            mayusAct = true;
+        } else if (contra.equals("")) {
             switch (evt.getExtendedKeyCode()) {
-                case KeyEvent.VK_ENTER -> JOptionPane.showMessageDialog(null, "Por favor, Llene todos los campos", "Advertencia", JOptionPane.WARNING_MESSAGE);
-                case KeyEvent.VK_BACK_SPACE -> txtUsuario.requestFocus();
-            }
-        }else{
-            if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
-                        lblIngresarMouseClicked(null);
+                case KeyEvent.VK_ENTER:
+                    JOptionPane.showMessageDialog(null, "Por favor, Llene todos los campos", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                    break;
+                case KeyEvent.VK_BACK_SPACE:
+                    if (mayusAct) {
+                        lbBlocM1.setVisible(true);
+                        lbBlockM2.setVisible(false);
                     }
+                    txtUsuario.requestFocus();
+                    break;
+            }
+
+        }  else {
+            if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+                lblIngresarMouseClicked(null);
+            }
         }
     }//GEN-LAST:event_txtContrasenaKeyPressed
 
@@ -416,6 +506,26 @@ public class Login extends javax.swing.JFrame {
         xMouse = evt.getX();
         yMouse = evt.getY();
     }//GEN-LAST:event_pnHeadMousePressed
+
+    private void pn1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_pn1KeyPressed
+
+    }//GEN-LAST:event_pn1KeyPressed
+
+    private void txtUsuarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtUsuarioMouseClicked
+        if (mayusAct) {
+            lbBlocM1.setVisible(true);
+            lbBlockM2.setVisible(false);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUsuarioMouseClicked
+
+    private void txtContrasenaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtContrasenaMouseClicked
+        if (mayusAct) {
+            lbBlockM2.setVisible(true);
+            lbBlocM1.setVisible(false);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtContrasenaMouseClicked
     int xMouse, yMouse;
 
     public boolean valida(String cor, String cont) {
@@ -427,6 +537,7 @@ public class Login extends javax.swing.JFrame {
                 if (rs.getString(6).equals(cor)
                         && rs.getString(7).equals(cont)) {
                     nombreU = rs.getString(4);
+                    rol = rs.getString(2);
                     return true;
                 }
                 i++;
@@ -484,8 +595,12 @@ public class Login extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lbBlocM1;
+    private javax.swing.JLabel lbBlockM2;
     private javax.swing.JLabel lbC;
     private javax.swing.JLabel lbErrorAux;
+    private javax.swing.JLabel lbFondoA;
     private javax.swing.JLabel lbSt;
     private javax.swing.JLabel lbStatus;
     private javax.swing.JLabel lbTelefono;
