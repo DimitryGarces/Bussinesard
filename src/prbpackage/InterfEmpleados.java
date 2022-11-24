@@ -26,7 +26,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private Icon icono;
     private static Connection con;
     private static String nombreU = "", rol = "";
-    String sqlContactos = "SELECT Nombre FROM bussinesscard.empleado where Nombre NOT LIKE ";
+    String sqlContactos = "";
     String sqlMensajes = "";
     Statement st;
     int i;
@@ -74,7 +74,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
     public void valida() {
         i = 0;
-        sqlContactos += " \"" + nombreU + "\";";
+        sqlContactos = "SELECT Nombre FROM bussinesscard.empleado where Nombre NOT LIKE \"" + nombreU + "\";";
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlContactos);
@@ -342,7 +342,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
     private void listContactosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listContactosMouseClicked
 
-        arr = null;
         lbNombreChat.setText("");
         O = D = "";
         String selected = listContactos.getSelectedValue();
@@ -386,6 +385,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Inicia una conversacion!");
         }
     }
+
     private void lbEnviarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbEnviarMouseClicked
 
         Calendar fecha = new GregorianCalendar();
@@ -433,7 +433,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
     private void lbDarBajaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbDarBajaMouseClicked
 
-        InterfBajaEmpleado baja = new InterfBajaEmpleado(con,arr);
+        InterfBajaEmpleado baja = new InterfBajaEmpleado(con,nombreU,rol);
         baja.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_lbDarBajaMouseClicked
