@@ -228,6 +228,11 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         });
 
         lbArchivo.setOpaque(true);
+        lbArchivo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbArchivoMouseClicked(evt);
+            }
+        });
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel3.setText("Mensaje");
@@ -347,16 +352,30 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         String selected = listContactos.getSelectedValue();
         lbNombreChat.setText(selected);
         arr = null;
-        sqlMensajes = " SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre  FROM "
+        sqlMensajes = "SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre  FROM "
                 + " bussinesscard.Mensaje INNER JOIN bussinesscard.Empleado on Empleado.Id_Empleado = Mensaje.Id_Empleado_D"
                 + " WHERE Nombre LIKE  \"" + selected + "\" AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
-                + "WHERE Nombre LIKE \"" + nombreU + "\") ORDER BY Fecha DESC; ";
+                + "WHERE Nombre LIKE \"" + nombreU + "\")"
+                + "UNION SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre  FROM "
+                + " bussinesscard.Mensaje INNER JOIN bussinesscard.Empleado on Empleado.Id_Empleado = Mensaje.Id_Empleado_D"
+                + " WHERE Nombre LIKE  \"" + nombreU + "\" AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
+                + "WHERE Nombre LIKE \"" + selected + "\") ORDER BY Fecha ASC; ";
         i = 0;
         try {
+
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlMensajes);
             while (rs.next()) {
-                inserta("De: " + nombreU + "\nPara: " + selected + "\n(" + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
+                if (rootPaneCheckingEnabled) {
+
+                }
+                String origen = "SELECT Nombre FROM Empleado WHERE Id_Empleado = " + rs.getString("Id_Empleado_O") + ";";
+                String destino = "SELECT Nombre FROM Empleado WHERE Id_Empleado = " + rs.getString("Id_Empleado_D") + ";";
+                ResultSet rs2 = st.executeQuery(origen);
+                ResultSet rs3 = st.executeQuery(destino);
+                rs2.next();
+                rs3.next();
+                inserta("De: " + rs3.getString("Nombre") + "\nPara: " + rs2.getString("Nombre") + "\n(" + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
                 O = rs.getString(1);
                 D = rs.getString(2);
             }
@@ -390,7 +409,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
         Calendar fecha = new GregorianCalendar();
         String ano = Integer.toString(fecha.get(Calendar.YEAR));
-        String mes = Integer.toString(fecha.get(Calendar.MONTH));
+        String mes = Integer.toString(fecha.get(Calendar.MONTH) + 1);
         String dia = Integer.toString(fecha.get(Calendar.DAY_OF_MONTH));
         String hora = Integer.toString(fecha.get(Calendar.HOUR_OF_DAY));
         String minuto = Integer.toString(fecha.get(Calendar.MINUTE));
@@ -406,7 +425,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             pps.setString(5, "");
             pps.executeUpdate();
             txtMensaje.setText("");
-            JOptionPane.showMessageDialog(null, "Enviado!");
+            //JOptionPane.showMessageDialog(null, "Enviado!");
             listContactosMouseClicked(null);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Ups! Algo a salido mal.", "Advertencia", JOptionPane.WARNING_MESSAGE);
@@ -433,10 +452,16 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
     private void lbDarBajaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbDarBajaMouseClicked
 
-        InterfBajaEmpleado baja = new InterfBajaEmpleado(con,nombreU,rol);
+        InterfBajaEmpleado baja = new InterfBajaEmpleado(con, nombreU, rol);
         baja.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_lbDarBajaMouseClicked
+
+    private void lbArchivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbArchivoMouseClicked
+        listContactosMouseClicked(null);
+        actualizaMensajes();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbArchivoMouseClicked
 
     public static void main(String args[]) {
 
