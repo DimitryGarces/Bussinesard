@@ -1,4 +1,3 @@
-
 package prbpackage;
 
 import java.awt.Color;
@@ -77,6 +76,13 @@ public class Login extends javax.swing.JFrame {
         } else {
             lbBlocM1.setVisible(false);
         }
+        String c = obj.cargaC("Correo.dat");
+        String co = obj.cargaC("Contra.dat");
+        if (c!=null) {
+            txtUsuario.setText("" + c);
+            txtContrasena.setText("" + co);
+        }
+//        System.out.println(""+arr[0]);
 
         conector();
     }
@@ -126,6 +132,7 @@ public class Login extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         lbBlocM1 = new javax.swing.JLabel();
         lbBlockM2 = new javax.swing.JLabel();
+        cbSalvarContra = new javax.swing.JCheckBox();
         lbFondoA = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -318,15 +325,16 @@ public class Login extends javax.swing.JFrame {
         lbBlockM2.setForeground(new java.awt.Color(255, 0, 0));
         lbBlockM2.setText("Block Mayus Activado");
 
+        cbSalvarContra.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        cbSalvarContra.setText("Salva Contraseña");
+        cbSalvarContra.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+
         javax.swing.GroupLayout pn1Layout = new javax.swing.GroupLayout(pn1);
         pn1.setLayout(pn1Layout);
         pn1Layout.setHorizontalGroup(
             pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pn1Layout.createSequentialGroup()
-                .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pn1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1))
+                .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pn1Layout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -337,14 +345,21 @@ public class Login extends javax.swing.JFrame {
                                 .addComponent(txtContrasena, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(lbBlocM1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblContraseña, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(34, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtIngresar))
-                .addGap(117, 117, 117))
+                                .addComponent(lblContraseña, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn1Layout.createSequentialGroup()
+                        .addGap(115, 115, 115)
+                        .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pn1Layout.createSequentialGroup()
+                                .addComponent(txtIngresar)
+                                .addGap(119, 119, 119))
+                            .addGroup(pn1Layout.createSequentialGroup()
+                                .addComponent(lblIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cbSalvarContra))))
+                    .addGroup(pn1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pn1Layout.setVerticalGroup(
             pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -363,8 +378,13 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbBlockM2)
-                .addGap(18, 18, 18)
-                .addComponent(lblIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pn1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pn1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(lblIngresar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pn1Layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(cbSalvarContra)))
                 .addGap(0, 0, 0)
                 .addComponent(txtIngresar)
                 .addContainerGap(9, Short.MAX_VALUE))
@@ -412,6 +432,10 @@ public class Login extends javax.swing.JFrame {
         char[] arrayC = txtContrasena.getPassword();
         String contra = new String(arrayC);
         if (valida(correo, contra)) {
+            if (cbSalvarContra.isSelected()) {
+                obj.guardaC("Correo.dat", correo);
+                obj.guardaC("Contra.dat", contra);
+            }
             InterfEmpleados interf = new InterfEmpleados(con, nombreU, rol);
             interf.setVisible(true);
             this.setVisible(false);
@@ -467,7 +491,7 @@ public class Login extends javax.swing.JFrame {
                     break;
             }
 
-        }  else {
+        } else {
             if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
                 lblIngresarMouseClicked(null);
             }
@@ -590,8 +614,9 @@ public class Login extends javax.swing.JFrame {
         });
     }
 
-
+    private prbpackage.GuardarContrasenia obj = new GuardarContrasenia();
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbSalvarContra;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lbBlocM1;
     private javax.swing.JLabel lbBlockM2;

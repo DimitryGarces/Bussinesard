@@ -25,34 +25,105 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private ImageIcon imagen;
     private Icon icono;
     private static Connection con;
-    private static String nombreU = "", rol = "";
-    String sqlContactos = "";
-    String sqlMensajes = "";
+    private static String nombreU = "", rol = "", o = "", d = "";
+    String sqlContactos = "", sqlMensajes = "", selected;
     Statement st;
-    int i;
-    String O, D;
-    private String arr[] = null;
+    private Arreglo arrC = new Arreglo(), arrM = new Arreglo();
+    Thread hiloA;
+
+    int b = 0;
 
     /**
      * Creates new form InterfEmpleados
      *
      * @param con
      * @param nombre
+     * @param rol
      */
     public InterfEmpleados(Connection con, String nombre, String rol) {
         initComponents();
-        this.con = con;
-        this.nombreU = nombre;
-        this.rol = rol;
+        InterfEmpleados.con = con;
+        InterfEmpleados.nombreU = nombre;
+        InterfEmpleados.rol = rol;
+        lbMsjBienvenida.setText("Hola de nuevo " + nombreU + " ! ");
         pintarImagen(lbRegistrar, "/imgspackage/registro.png");
         pintarImagen(lbArchivo, "/imgspackage/Archivo.png");
         pintarImagen(lbEnviar, "/imgspackage/Enviar.png");
         pintaRol();
-//        pintarImagen(lbRecargar, "/imgspackage/reload.png");
-        lbMsjBienvenida.setText("Hola de nuevo " + nombreU + " ! ");
-        valida();
+        listMensajes.setVisible(false);
+        lbM.setVisible(false);
+        txtMensaje.setVisible(false);
+        lbArchivo.setVisible(false);
+        lbEnviar.setVisible(false);
+        lbNombreChat.setVisible(false);
+        hiloA = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        valida();
+                        System.out.println("Contactos Actualizados");
+                        if (b == 1) {
+                            mensajes();
+                            System.out.println("Msj Actualizados");
+                        }
+                    } catch (Exception exF) {
 
+                    }
+                    try {
+                        Thread.sleep(1200);
+                    } catch (InterruptedException ex) {
+                        JOptionPane.showMessageDialog(null, "Error de sincronización", "Fatal", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                }
+            }
+        });
+        hiloA.start();
 //        this.pnContactos.add(myList, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 140, 450));
+    }
+
+    public void valida() {
+        sqlContactos = "SELECT Nombre FROM bussinesscard.empleado where Nombre NOT LIKE \"" + nombreU + "\";";
+        try {
+            st = con.createStatement();
+            ResultSet rs = st.executeQuery(sqlContactos);
+            while (rs.next()) {
+                arrC.inserta(rs.getString(1));
+            }
+//             for (int j = 0; j < arr.length; j++) {
+//                myList.addItem(new Item(arr[j], new ImageIcon(getClass().getResource("/imgspackage/Conected.png"))));
+//            }
+            listContactos.setModel(new javax.swing.AbstractListModel<String>() {
+                String[] strings = arrC.getArr();
+
+                @Override
+                public int getSize() {
+                    return strings.length;
+                }
+
+                @Override
+                public String getElementAt(int i) {
+                    return strings[i];
+                }
+            });
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        arrC.vaciarArr();
+    }
+
+    private void pintarImagen(JLabel lbl, String ruta) {
+        this.imagen = new ImageIcon(getClass().getResource(ruta));
+        this.icono = new ImageIcon(
+                this.imagen.getImage().getScaledInstance(
+                        lbl.getWidth(),
+                        lbl.getHeight(),
+                        Image.SCALE_DEFAULT
+                )
+        );
+        lbl.setIcon(this.icono);
+        this.repaint();
     }
 
     public void pintaRol() {
@@ -72,63 +143,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         }
     }
 
-    public void valida() {
-        i = 0;
-        sqlContactos = "SELECT Nombre FROM bussinesscard.empleado where Nombre NOT LIKE \"" + nombreU + "\";";
-        try {
-            st = con.createStatement();
-            ResultSet rs = st.executeQuery(sqlContactos);
-            while (rs.next()) {
-                inserta(rs.getString(1));
-                i++;
-            }
-//             for (int j = 0; j < arr.length; j++) {
-//                myList.addItem(new Item(arr[j], new ImageIcon(getClass().getResource("/imgspackage/Conected.png"))));
-//            }
-            listContactos.setModel(new javax.swing.AbstractListModel<String>() {
-
-                String[] strings = arr;
-
-                public int getSize() {
-                    return strings.length;
-                }
-
-                public String getElementAt(int i) {
-                    return strings[i];
-                }
-
-            });
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
-    public void inserta(String a) {
-        if (arr == null) {
-            arr = new String[1];
-            arr[0] = a;
-        } else {
-            String nvo[] = new String[arr.length + 1];
-            System.arraycopy(arr, 0, nvo, 0, arr.length);
-            nvo[arr.length] = a;
-            arr = nvo;
-        }
-    }
-
-    private void pintarImagen(JLabel lbl, String ruta) {
-        this.imagen = new ImageIcon(getClass().getResource(ruta));
-        this.icono = new ImageIcon(
-                this.imagen.getImage().getScaledInstance(
-                        lbl.getWidth(),
-                        lbl.getHeight(),
-                        Image.SCALE_DEFAULT
-                )
-        );
-        lbl.setIcon(this.icono);
-        this.repaint();
-    }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -143,7 +157,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         txtMensaje = new javax.swing.JTextField();
         lbEnviar = new javax.swing.JLabel();
         lbArchivo = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lbM = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listMensajes = new javax.swing.JList<>();
         lbNombreChat = new javax.swing.JLabel();
@@ -234,8 +248,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        jLabel3.setText("Mensaje");
+        lbM.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lbM.setText("Mensaje");
 
         listMensajes.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jScrollPane2.setViewportView(listMensajes);
@@ -249,7 +263,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnMensajesLayout.createSequentialGroup()
                 .addGap(14, 14, 14)
-                .addComponent(jLabel3)
+                .addComponent(lbM)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
@@ -272,7 +286,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
+                    .addComponent(lbM)
                     .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -346,63 +360,69 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     }//GEN-LAST:event_lbRegistrarMouseClicked
 
     private void listContactosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listContactosMouseClicked
-
-        lbNombreChat.setText("");
-        O = D = "";
-        String selected = listContactos.getSelectedValue();
-        lbNombreChat.setText(selected);
-        arr = null;
-        sqlMensajes = "SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre  FROM "
-                + " bussinesscard.Mensaje INNER JOIN bussinesscard.Empleado on Empleado.Id_Empleado = Mensaje.Id_Empleado_D"
-                + " WHERE Nombre LIKE  \"" + selected + "\" AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
-                + "WHERE Nombre LIKE \"" + nombreU + "\")"
-                + "UNION SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre  FROM "
-                + " bussinesscard.Mensaje INNER JOIN bussinesscard.Empleado on Empleado.Id_Empleado = Mensaje.Id_Empleado_D"
-                + " WHERE Nombre LIKE  \"" + nombreU + "\" AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
-                + "WHERE Nombre LIKE \"" + selected + "\") ORDER BY Fecha ASC; ";
-        i = 0;
-        try {
-
-            st = con.createStatement();
-            ResultSet rs = st.executeQuery(sqlMensajes);
-            while (rs.next()) {
-                if (rootPaneCheckingEnabled) {
-
-                }
-                String origen = "SELECT Nombre FROM Empleado WHERE Id_Empleado = " + rs.getString("Id_Empleado_O") + ";";
-                String destino = "SELECT Nombre FROM Empleado WHERE Id_Empleado = " + rs.getString("Id_Empleado_D") + ";";
-                ResultSet rs2 = st.executeQuery(origen);
-                ResultSet rs3 = st.executeQuery(destino);
-                rs2.next();
-                rs3.next();
-                inserta("De: " + rs3.getString("Nombre") + "\nPara: " + rs2.getString("Nombre") + "\n(" + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
-                O = rs.getString(1);
-                D = rs.getString(2);
-            }
-            i++;
-        } catch (SQLException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        actualizaMensajes();
-
+        selected = listContactos.getSelectedValue();
+        listMensajes.setVisible(true);
+        lbM.setVisible(true);
+        txtMensaje.setVisible(true);
+        lbArchivo.setVisible(true);
+        lbEnviar.setVisible(true);
+        lbNombreChat.setVisible(true);
+        b = 1;
+        mensajes();
     }//GEN-LAST:event_listContactosMouseClicked
 
-    public void actualizaMensajes() {
-        if (arr != null) {
-            listMensajes.setModel(new javax.swing.AbstractListModel<String>() {
-                String[] strings = arr;
+    private void mensajes() {
+        if (selected != null) {
+            lbNombreChat.setText("Estas en chat con " + selected);
 
-                public int getSize() {
-                    return strings.length;
-                }
+            sqlMensajes = "SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre  FROM bussinesscard.Mensaje"
+                    + " INNER JOIN bussinesscard.Empleado on Empleado.Id_Empleado = Mensaje.Id_Empleado_D WHERE Nombre LIKE  "
+                    + "\"" + selected + "\" AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
+                    + "WHERE Nombre LIKE \"" + nombreU + "\")"
+                    + "UNION SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre FROM bussinesscard.Mensaje"
+                    + " INNER JOIN bussinesscard.Empleado on Empleado.Id_Empleado = Mensaje.Id_Empleado_D WHERE Nombre LIKE  "
+                    + "\"" + nombreU + "\" AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
+                    + "WHERE Nombre LIKE \"" + selected + "\") ORDER BY Fecha ASC; ";
+            try {
+                st = con.createStatement();
+                ResultSet rs = st.executeQuery(sqlMensajes);
+                while (rs.next()) {
+                    o = rs.getString(1);
+                    d = rs.getString(2);
+                    String origen = "SELECT Nombre FROM Empleado WHERE Id_Empleado = " + o + ";";
+                    String destino = "SELECT Nombre FROM Empleado WHERE Id_Empleado = " + d + ";";
+                    ResultSet rs2 = st.executeQuery(origen);
+                    ResultSet rs3 = st.executeQuery(destino);
+                    rs2.next();
+                    rs3.next();
 
-                public String getElementAt(int i) {
-                    return strings[i];
+                    arrM.inserta("De: " + rs2.getString(1) + "\tPara: " + rs3.getString(1) + "\t(" + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
                 }
-            });
-        } else {
-            JOptionPane.showMessageDialog(null, "Inicia una conversacion!");
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            actualizaMensajes();
+            arrM.vaciarArr();
         }
+    }
+
+    public void actualizaMensajes() {
+        if (arrM.vacio()) {
+            arrM.inserta("");
+        }
+        listMensajes.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = arrM.getArr();
+
+            @Override
+            public int getSize() {
+                return strings.length;
+            }
+
+            @Override
+            public String getElementAt(int i) {
+                return strings[i];
+            }
+        });
     }
 
     private void lbEnviarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbEnviarMouseClicked
@@ -416,21 +436,30 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         String seg = Integer.toString(fecha.get(Calendar.SECOND));
         String fechaF = ano + "-" + mes + "-" + dia + "-" + hora + "-" + minuto + "-" + seg;
         try {
+            if (o.equals("") || d.equals("")) {
+                String origen = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + nombreU + "\";";
+                String destino = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + selected + "\";";
+                ResultSet rs2 = st.executeQuery(origen);
+                ResultSet rs3 = st.executeQuery(destino);
+                rs2.next();
+                rs3.next();
+                o=rs2.getString(1);
+                d=rs3.getString(1);
+            }
             PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`mensaje` (`Id_Empleado_O`,`Id_Empleado_D`,`Fecha`,`Mensaje`,`Ruta_Arch`)"
                     + "Values (?,?,?,?,?)");
-            pps.setString(1, O);
-            pps.setString(2, D);
+            pps.setString(1, o);
+            pps.setString(2, d);
             pps.setString(3, fechaF);
             pps.setString(4, txtMensaje.getText());
             pps.setString(5, "");
             pps.executeUpdate();
             txtMensaje.setText("");
             //JOptionPane.showMessageDialog(null, "Enviado!");
-            listContactosMouseClicked(null);
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Ups! Algo a salido mal.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 
-//            Logger.getLogger(InterfAltaEmp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InterfAltaEmp.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_lbEnviarMouseClicked
@@ -466,21 +495,21 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new InterfEmpleados(con, nombreU, rol).setVisible(true);
             }
         });
     }
     private prbpackage.MyList myList = new prbpackage.MyList();
-    ;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lbArchivo;
     private javax.swing.JLabel lbDarBaja;
     private javax.swing.JLabel lbEnviar;
+    private javax.swing.JLabel lbM;
     private javax.swing.JLabel lbMsjBienvenida;
     private javax.swing.JLabel lbNombreChat;
     private javax.swing.JLabel lbRecargar;
@@ -495,4 +524,5 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private javax.swing.JLabel txtEncabezado;
     private javax.swing.JTextField txtMensaje;
     // End of variables declaration//GEN-END:variables
+
 }
