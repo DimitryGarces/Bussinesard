@@ -24,26 +24,49 @@ import org.mariadb.jdbc.Statement;
 public class InterfBajaEmpleado extends javax.swing.JFrame {
 
     private static Connection con;
-    private static String arr[] = null;
+    private static Arreglo arr = new Arreglo();
     private static String rol = "", nombreU = "";
     private ImageIcon imagen;
     private Icon icono;
     Statement st;
-    String sqlContactos = "";
-    String sqlListContactos = "";
+    String sqlContactos = "", sqlListContactos = "", selected = "";
+    Thread hilo;
 
     /**
      * Creates new form InterfBajaEmpleado
+     *
+     * @param con
+     * @param nombreU
+     * @param rol
      */
     public InterfBajaEmpleado(Connection con, String nombreU, String rol) {
         initComponents();
-        this.con = con;
-        this.arr = arr;
-        this.nombreU = nombreU;
+        InterfBajaEmpleado.con = con;
+        InterfBajaEmpleado.arr = new Arreglo();
+        InterfBajaEmpleado.nombreU = nombreU;
         pintarImagen(lbFondo, "/imgspackage/FondoBaja.png");
         pintarImagen(lbLogo, "/imgspackage/BusinessCard.png");
         pintarImagen(lbBoton, "/imgspackage/BajaEmpleado.png");
         valida();
+
+        hilo = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    if (selected != null) {
+                        valida();
+                        System.out.println("Contactos Actualizados");
+                    }
+                    try {
+                        Thread.sleep(1200);
+                    } catch (InterruptedException ex) {
+                        JOptionPane.showMessageDialog(null, "Error de sincronización", "Fatal", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                }
+            }
+        });
+        hilo.start();
     }
 
     public void valida() {
@@ -52,16 +75,17 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlListContactos);
             while (rs.next()) {
-                inserta(rs.getString(1));
+                arr.inserta(rs.getString(1));
             }
             lst.setModel(new javax.swing.AbstractListModel<String>() {
+                String[] strings = arr.getArr();
 
-                String[] strings = arr;
-
+                @Override
                 public int getSize() {
                     return strings.length;
                 }
 
+                @Override
                 public String getElementAt(int i) {
                     return strings[i];
                 }
@@ -70,19 +94,7 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-    }
-
-    public void inserta(String a) {
-        if (arr == null) {
-            arr = new String[1];
-            arr[0] = a;
-        } else {
-            String nvo[] = new String[arr.length + 1];
-            System.arraycopy(arr, 0, nvo, 0, arr.length);
-            nvo[arr.length] = a;
-            arr = nvo;
-        }
+        arr.vaciarArr();
     }
 
     private void pintarImagen(JLabel lbl, String ruta) {
@@ -214,8 +226,8 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
         });
         pnContainer.add(lbBoton, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 290, 60, 50));
         pnContainer.add(txtNom, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 160, 120, -1));
-        pnContainer.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 230, 100, -1));
-        pnContainer.add(txtRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 160, 100, -1));
+        pnContainer.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 230, 120, -1));
+        pnContainer.add(txtRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 160, 150, -1));
         pnContainer.add(lbFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 560, 300));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -234,10 +246,11 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lbBotonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbBotonMouseClicked
-        if (!txtNom.equals("")) {
+        if (selected != null) {
             try {
-                PreparedStatement pps = con.prepareStatement("Delete from empleado where nombre like \"" + lst.getSelectedValue() + "\"");
-                valida();
+                String sql = "Delete from empleado where nombre like \"" + selected + "\"";
+                st = con.createStatement();
+                st.executeUpdate(sql);
                 txtNom.setText("");
                 txtApellidos.setText("");
                 txtRol.setText("");
@@ -248,20 +261,19 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
         } else {
 
         }
-        // TODO add your handling code here:
     }//GEN-LAST:event_lbBotonMouseClicked
 
     private void lstMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lstMouseClicked
-
-        sqlContactos = "SELECT Apellidos,role.Nombre FROM bussinesscard.empleado "
-                + "INNER JOIN bussinesscard.role on empleado.role= role.id_role where empleado.nombre like \"" + lst.getSelectedValue() + "\";";
+        selected = lst.getSelectedValue();
+        sqlContactos = "SELECT Apellidos,role.Nombre FROM bussinesscard.empleado INNER JOIN bussinesscard.role on"
+                + " empleado.role= role.id_role where empleado.nombre like \"" + selected + "\";";
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlContactos);
-            txtNom.setText(lst.getSelectedValue());
+            rs.next();
+            txtNom.setText(selected);
             txtApellidos.setText(rs.getString(1));
             txtRol.setText(rs.getString(2));
-
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Parece ser que algo no salio bien.");
         }
@@ -271,30 +283,7 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(InterfBajaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(InterfBajaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(InterfBajaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(InterfBajaEmpleado.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new InterfBajaEmpleado(con, nombreU, rol).setVisible(true);

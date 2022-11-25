@@ -62,7 +62,6 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
-
         pintarImagen(txtLogo, "/imgspackage/BusinessCard.png");
         pintarImagen(lblIngresar, "/imgspackage/usuario.png");
         pintarImagen(txtCerrar, "/imgspackage/Cerrar.png");

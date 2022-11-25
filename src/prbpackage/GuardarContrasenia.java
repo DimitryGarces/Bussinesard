@@ -24,7 +24,7 @@ public class GuardarContrasenia <Tipo>{
             arch.close();
         } catch (FileNotFoundException ex)
         {
-            System.out.println("Error, no se encontró el archivo... ");
+//            System.out.println("Error, no se encontró el archivo... ");
         }
         catch(IOException ex){
             System.out.println("Error "+ ex.toString());
@@ -40,7 +40,7 @@ public class GuardarContrasenia <Tipo>{
             
         } catch (FileNotFoundException ex)
         {
-            System.out.println("Error no se encontro el archivo ");
+//            System.out.println("Error no se encontro el archivo ");
         } catch (Exception ex)
         {
             System.out.println("Error "+ ex.toString());
