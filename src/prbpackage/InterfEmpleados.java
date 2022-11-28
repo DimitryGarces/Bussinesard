@@ -28,9 +28,9 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private static String nombreU = "", rol = "", o = "", d = "";
     String sqlContactos = "", sqlMensajes = "", selected;
     Statement st;
-    private Arreglo arrC = new Arreglo(), arrM = new Arreglo();
+    private Arreglo arrC = new Arreglo(), arrM = new Arreglo(), arrG = new Arreglo();
     Thread hiloA;
-
+    private static int grupo = -1;
     int b = 0;
 
     /**
@@ -40,15 +40,18 @@ public final class InterfEmpleados extends javax.swing.JFrame {
      * @param nombre
      * @param rol
      */
-    public InterfEmpleados(Connection con, String nombre, String rol) {
+    public InterfEmpleados(Connection con, String nombre, String rol, int grupo) {
         initComponents();
         InterfEmpleados.con = con;
         InterfEmpleados.nombreU = nombre;
         InterfEmpleados.rol = rol;
+        InterfEmpleados.grupo = grupo;
         lbMsjBienvenida.setText("Hola de nuevo " + nombreU + " ! ");
         pintarImagen(lbRegistrar, "/imgspackage/registro.png");
         pintarImagen(lbArchivo, "/imgspackage/Archivo.png");
         pintarImagen(lbEnviar, "/imgspackage/Enviar.png");
+        pintarImagen(lbAltaGrupo, "/imgspackage/Grupos.png");
+        pintarImagen(lbCerrarSesion, "/imgspackage/CerrarSesion.png");
         pintaRol();
         listMensajes.setVisible(false);
         lbM.setVisible(false);
@@ -62,10 +65,14 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 while (true) {
                     try {
                         valida();
-                        System.out.println("Contactos Actualizados");
+                        validaGrupos();
+//                        System.out.println("Contactos Actualizados");
                         if (b == 1) {
                             mensajes();
-                            System.out.println("Msj Actualizados");
+//                            System.out.println("Msj privados Actualizados");
+                        } else if (b == 2) {
+                            grupos();
+//                            System.out.println("Msj grupales Actualizados");
                         }
                     } catch (Exception exF) {
 
@@ -89,7 +96,13 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlContactos);
             while (rs.next()) {
-                arrC.inserta(rs.getString(1));
+                String aux = rs.getString(1);
+                if (aux.contains("Grupo")) {
+
+                } else {
+                    arrC.inserta(aux);
+                }
+
             }
 //             for (int j = 0; j < arr.length; j++) {
 //                myList.addItem(new Item(arr[j], new ImageIcon(getClass().getResource("/imgspackage/Conected.png"))));
@@ -111,6 +124,40 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
         arrC.vaciarArr();
+    }
+
+    public void validaGrupos() {
+        if (grupo != -1) {
+            lbGrupos.setVisible(true);
+            listGrupos.setVisible(true);
+            sqlContactos = "SELECT NombreGrupo FROM bussinesscard.grupo where Id_Grupo =" + grupo + ";";
+            try {
+                st = con.createStatement();
+                ResultSet rs = st.executeQuery(sqlContactos);
+                while (rs.next()) {
+                    arrG.inserta(rs.getString(1));
+                }
+                listGrupos.setModel(new javax.swing.AbstractListModel<String>() {
+                    String[] strings = arrG.getArr();
+
+                    @Override
+                    public int getSize() {
+                        return strings.length;
+                    }
+
+                    @Override
+                    public String getElementAt(int i) {
+                        return strings[i];
+                    }
+                });
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            arrG.vaciarArr();
+        } else {
+            lbGrupos.setVisible(false);
+            listGrupos.setVisible(false);
+        }
     }
 
     private void pintarImagen(JLabel lbl, String ruta) {
@@ -136,10 +183,12 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             pintarImagen(lbRol, "/imgspackage/Moderador.png");
             lbRegistrar.setVisible(false);
             lbDarBaja.setVisible(false);
+            lbAltaGrupo.setVisible(false);
         } else {
             pintarImagen(lbRol, "/imgspackage/Empleado.png");
             lbRegistrar.setVisible(false);
             lbDarBaja.setVisible(false);
+            lbAltaGrupo.setVisible(false);
         }
     }
 
@@ -153,6 +202,10 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         listContactos = new javax.swing.JList<>();
         lbRecargar = new javax.swing.JLabel();
         lbRol = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listGrupos = new javax.swing.JList<>();
+        lbGrupos = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         pnMensajes = new javax.swing.JPanel();
         txtMensaje = new javax.swing.JTextField();
         lbEnviar = new javax.swing.JLabel();
@@ -163,9 +216,11 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         lbNombreChat = new javax.swing.JLabel();
         pnHead = new javax.swing.JPanel();
         txtEncabezado = new javax.swing.JLabel();
+        lbCerrarSesion = new javax.swing.JLabel();
         lbRegistrar = new javax.swing.JLabel();
         lbMsjBienvenida = new javax.swing.JLabel();
         lbDarBaja = new javax.swing.JLabel();
+        lbAltaGrupo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mensajes");
@@ -175,7 +230,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
         pnContactos.setBackground(new java.awt.Color(255, 102, 0));
 
-        listContactos.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        listContactos.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         listContactos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listContactosMouseClicked(evt);
@@ -189,40 +244,72 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             }
         });
 
+        listGrupos.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        listGrupos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listGruposMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(listGrupos);
+
+        lbGrupos.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        lbGrupos.setText("Grupo(s)");
+
+        jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel2.setText("Contactos");
+
         javax.swing.GroupLayout pnContactosLayout = new javax.swing.GroupLayout(pnContactos);
         pnContactos.setLayout(pnContactosLayout);
         pnContactosLayout.setHorizontalGroup(
             pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnContactosLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
             .addGroup(pnContactosLayout.createSequentialGroup()
                 .addGroup(pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnContactosLayout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(lbRecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnContactosLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                        .addGroup(pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnContactosLayout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addComponent(lbRecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnContactosLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lbGrupos))
+                            .addGroup(pnContactosLayout.createSequentialGroup()
+                                .addGap(22, 22, 22)
+                                .addComponent(jLabel2))
+                            .addGroup(pnContactosLayout.createSequentialGroup()
+                                .addGap(44, 44, 44)
+                                .addComponent(lbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnContactosLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 6, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnContactosLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         pnContactosLayout.setVerticalGroup(
             pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnContactosLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(lbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28)
+                .addContainerGap()
+                .addComponent(lbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(143, 143, 143)
-                .addComponent(lbRecargar, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                .addGap(26, 26, 26)
+                .addComponent(lbGrupos)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(87, 87, 87)
+                .addComponent(lbRecargar, javax.swing.GroupLayout.DEFAULT_SIZE, 12, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        pnContenedor.add(pnContactos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 140, 450));
+        pnContenedor.add(pnContactos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 170, 450));
 
         pnMensajes.setBackground(new java.awt.Color(255, 255, 255));
 
+        txtMensaje.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         txtMensaje.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtMensajeActionPerformed(evt);
@@ -262,77 +349,100 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         pnMensajesLayout.setHorizontalGroup(
             pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnMensajesLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(lbM)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                .addComponent(lbArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(45, 45, 45)
+                .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnMensajesLayout.createSequentialGroup()
+                        .addComponent(lbM)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnMensajesLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(pnMensajesLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbNombreChat)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(55, 55, 55)
+                .addComponent(lbNombreChat, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnMensajesLayout.setVerticalGroup(
             pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMensajesLayout.createSequentialGroup()
                 .addComponent(lbNombreChat)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbM)
-                    .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lbArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbM))
                 .addGap(27, 27, 27))
         );
 
-        pnContenedor.add(pnMensajes, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 90, 610, 360));
+        pnContenedor.add(pnMensajes, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 90, 580, 360));
 
         pnHead.setBackground(new java.awt.Color(255, 153, 51));
 
         txtEncabezado.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         txtEncabezado.setText("BUSINESSCARD");
 
+        lbCerrarSesion.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbCerrarSesionMouseClicked(evt);
+            }
+        });
+        lbCerrarSesion.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                lbCerrarSesionKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnHeadLayout = new javax.swing.GroupLayout(pnHead);
         pnHead.setLayout(pnHeadLayout);
         pnHeadLayout.setHorizontalGroup(
             pnHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnHeadLayout.createSequentialGroup()
-                .addComponent(txtEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 365, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(txtEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
+                .addComponent(lbCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnHeadLayout.setVerticalGroup(
             pnHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(txtEncabezado, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+            .addComponent(lbCerrarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        pnContenedor.add(pnHead, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 610, 40));
+        pnContenedor.add(pnHead, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 0, 580, 40));
 
         lbRegistrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lbRegistrarMouseClicked(evt);
             }
         });
-        pnContenedor.add(lbRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 40, 60, 50));
+        pnContenedor.add(lbRegistrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 50, 50, 40));
 
         lbMsjBienvenida.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lbMsjBienvenida.setText("Hola");
-        pnContenedor.add(lbMsjBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 340, 30));
+        pnContenedor.add(lbMsjBienvenida, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 40, 310, 30));
 
         lbDarBaja.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lbDarBajaMouseClicked(evt);
             }
         });
-        pnContenedor.add(lbDarBaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 50, 50, 40));
+        pnContenedor.add(lbDarBaja, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 50, 50, 40));
+
+        lbAltaGrupo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbAltaGrupoMouseClicked(evt);
+            }
+        });
+        pnContenedor.add(lbAltaGrupo, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 40, 80, 70));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -395,8 +505,12 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                     ResultSet rs3 = st.executeQuery(destino);
                     rs2.next();
                     rs3.next();
+                    if (rs2.getString(1).contains("Grupo")) {
 
-                    arrM.inserta("De: " + rs2.getString(1) + "\tPara: " + rs3.getString(1) + "\t(" + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
+                    } else {
+                        arrM.inserta("De: " + rs2.getString(1) + "\tPara: " + rs3.getString(1) + "\t(" + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
+                    }
+
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
@@ -425,6 +539,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         });
     }
 
+
     private void lbEnviarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbEnviarMouseClicked
 
         Calendar fecha = new GregorianCalendar();
@@ -436,15 +551,30 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         String seg = Integer.toString(fecha.get(Calendar.SECOND));
         String fechaF = ano + "-" + mes + "-" + dia + "-" + hora + "-" + minuto + "-" + seg;
         try {
-            if (o.equals("") || d.equals("")) {
+            if (b == 2) {
+                sqlContactos = "SELECT Id_Owner FROM bussinesscard.grupo where NombreGrupo LIKE \"" + selected + "\";";
+                String origen = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + nombreU + "\";";
+                try {
+                    ResultSet rs2 = st.executeQuery(origen);
+                    rs2.next();
+                    o = rs2.getString(1);
+                    st = con.createStatement();
+                    ResultSet rs = st.executeQuery(sqlContactos);
+                    while (rs.next()) {
+                        d = rs.getString(1);
+                    }
+                } catch (SQLException ex) {
+
+                }
+            } else if (o.equals("") || d.equals("")) {
                 String origen = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + nombreU + "\";";
                 String destino = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + selected + "\";";
                 ResultSet rs2 = st.executeQuery(origen);
                 ResultSet rs3 = st.executeQuery(destino);
                 rs2.next();
                 rs3.next();
-                o=rs2.getString(1);
-                d=rs3.getString(1);
+                o = rs2.getString(1);
+                d = rs3.getString(1);
             }
             PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`mensaje` (`Id_Empleado_O`,`Id_Empleado_D`,`Fecha`,`Mensaje`,`Ruta_Arch`)"
                     + "Values (?,?,?,?,?)");
@@ -492,23 +622,112 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lbArchivoMouseClicked
 
+    private void lbAltaGrupoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAltaGrupoMouseClicked
+        InterfAltaGrupos grupos = new InterfAltaGrupos(con, nombreU);
+        grupos.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbAltaGrupoMouseClicked
+
+    private void listGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listGruposMouseClicked
+
+        b = 2;
+        selected = listGrupos.getSelectedValue();
+        listMensajes.setVisible(true);
+        lbM.setVisible(true);
+        txtMensaje.setVisible(true);
+        lbArchivo.setVisible(true);
+        lbEnviar.setVisible(true);
+        lbNombreChat.setVisible(true);
+        grupos();
+    }//GEN-LAST:event_listGruposMouseClicked
+
+    private void lbCerrarSesionKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lbCerrarSesionKeyPressed
+
+    }//GEN-LAST:event_lbCerrarSesionKeyPressed
+
+    private void lbCerrarSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbCerrarSesionMouseClicked
+
+        Login log = new Login();
+        log.setVisible(true);
+        this.dispose();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbCerrarSesionMouseClicked
+    private void grupos() {
+        if (selected != null) {
+            lbNombreChat.setText("Estas en chat grupal " + selected);
+            try {
+                //Obtenemos el Id del Owner del grupo en el que estamos seleccionados actualmente
+                sqlMensajes = "SELECT Id_Empleado_D FROM bussinesscard.Mensaje"
+                        + " INNER JOIN bussinesscard.grupo on grupo.Id_Owner = mensaje.Id_Empleado_D where NombreGrupo LIKE"
+                        + "\"" + selected + "\"; ";
+
+                st = con.createStatement();
+                ResultSet rs = st.executeQuery(sqlMensajes);
+                rs.next();
+                d = rs.getString(1);
+                //Preguntamos por todos los mensajes que se hallan mandado a este owner, los cuales pertenecen a ese grupo
+                sqlMensajes = "SELECT Id_Empleado_O,Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre  FROM bussinesscard.Mensaje"
+                        + " INNER JOIN bussinesscard.Empleado on Empleado.Id_Empleado = Mensaje.Id_Empleado_D WHERE Id_Empleado_D"
+                        + " =  " + d + " ORDER BY Fecha ASC; ";
+                st = con.createStatement();
+                rs = st.executeQuery(sqlMensajes);
+                //A cada mensaje le sacamos el nombre de origen y concatenamos a la lista de mensajes
+                while (rs.next()) {
+                    o = rs.getString(1);
+                    String origen = "SELECT Nombre FROM Empleado WHERE Id_Empleado = " + o + ";";
+                    ResultSet rs2 = st.executeQuery(origen);
+                    rs2.next();
+                    arrG.inserta("De: " + rs2.getString(1) + "\tPara: (Todos) \t" + rs.getString(4) + "\n");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            actualizaGrupos();
+            arrG.vaciarArr();
+        }
+    }
+
+    public void actualizaGrupos() {
+        if (arrG.vacio()) {
+            arrG.inserta("");
+        }
+        listMensajes.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = arrG.getArr();
+
+            @Override
+            public int getSize() {
+                return strings.length;
+            }
+
+            @Override
+            public String getElementAt(int i) {
+                return strings[i];
+            }
+        });
+    }
+
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new InterfEmpleados(con, nombreU, rol).setVisible(true);
+                new InterfEmpleados(con, nombreU, rol, grupo).setVisible(true);
             }
         });
     }
     private prbpackage.MyList myList = new prbpackage.MyList();
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lbAltaGrupo;
     private javax.swing.JLabel lbArchivo;
+    private javax.swing.JLabel lbCerrarSesion;
     private javax.swing.JLabel lbDarBaja;
     private javax.swing.JLabel lbEnviar;
+    private javax.swing.JLabel lbGrupos;
     private javax.swing.JLabel lbM;
     private javax.swing.JLabel lbMsjBienvenida;
     private javax.swing.JLabel lbNombreChat;
@@ -516,6 +735,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private javax.swing.JLabel lbRegistrar;
     private javax.swing.JLabel lbRol;
     private javax.swing.JList<String> listContactos;
+    private javax.swing.JList<String> listGrupos;
     private javax.swing.JList<String> listMensajes;
     private javax.swing.JPanel pnContactos;
     private javax.swing.JPanel pnContenedor;

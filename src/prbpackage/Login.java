@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -34,7 +35,7 @@ public class Login extends javax.swing.JFrame {
     String sql = "Select Id_Empleado,role.nombre, Apellidos,empleado.Nombre,Telefono,Usuario,Contraseña,Id_Grupo from bussinesscard.empleado "
             + "Inner Join bussinesscard.role on Empleado.Role=Role.Id_Role", nombreU = "", error = "", rol = "";
     Statement st;
-    int i;
+    int i, grupo = -1;
     boolean mayusAct = false;
 
     public final void conector() {
@@ -77,7 +78,7 @@ public class Login extends javax.swing.JFrame {
         }
         String c = obj.cargaC("Correo.dat");
         String co = obj.cargaC("Contra.dat");
-        if (c!=null) {
+        if (c != null) {
             txtUsuario.setText("" + c);
             txtContrasena.setText("" + co);
         }
@@ -435,7 +436,7 @@ public class Login extends javax.swing.JFrame {
                 obj.guardaC("Correo.dat", correo);
                 obj.guardaC("Contra.dat", contra);
             }
-            InterfEmpleados interf = new InterfEmpleados(con, nombreU, rol);
+            InterfEmpleados interf = new InterfEmpleados(con, nombreU, rol, grupo);
             interf.setVisible(true);
             this.setVisible(false);
         } else if (i == 0) {
@@ -558,6 +559,11 @@ public class Login extends javax.swing.JFrame {
                         && rs.getString(7).equals(cont)) {
                     nombreU = rs.getString(4);
                     rol = rs.getString(2);
+                    try {
+                        grupo = Integer.parseInt(rs.getString(8));
+                    } catch (Exception ex) {
+                        
+                    }
                     return true;
                 }
                 i++;

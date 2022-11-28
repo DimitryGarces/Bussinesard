@@ -94,5 +94,8 @@ public class Arreglo {
         String arrAux[]=null;
         this.arr=arrAux;
     }
+    public String verPos(int i){
+        return arr[i];
+    }
     
 }

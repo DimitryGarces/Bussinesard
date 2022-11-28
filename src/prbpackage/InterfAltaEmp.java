@@ -9,6 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.mariadb.jdbc.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import org.mariadb.jdbc.Statement;
 
 /**
  *
@@ -17,6 +20,9 @@ import java.sql.PreparedStatement;
 public class InterfAltaEmp extends javax.swing.JFrame {
 
     private static Connection con = null;
+    String sql = "Select Id_Grupo,NombreGrupo from bussinesscard.grupo; ";
+    private Arreglo arrG = new Arreglo();
+    Statement st;
 //Simple borders
 
     /**
@@ -26,14 +32,42 @@ public class InterfAltaEmp extends javax.swing.JFrame {
      */
     public InterfAltaEmp(Connection con) {
         initComponents();
+        this.con = con;
         cbGrupo = new prbpackage.Combobox();
-        cbGrupo.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"", "Alfa", "Beta", "Foxtron"}));
+//        cbGrupo.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"", "Alfa", "Beta", "Foxtron"}));
+        valida();
         cbRol = new prbpackage.Combobox();
         cbRol.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"", "Administrador", "Moderador", "Empleado"}));
 
-        this.pnContainer.add(cbGrupo, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 120, -1, -1));
+        this.pnContainer.add(cbGrupo, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, -1, -1));
         this.pnContainer.add(cbRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 180, -1, -1));
-        this.con = con;
+    }
+
+    public void valida() {
+        try {
+            st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            arrG.inserta("");
+            while (rs.next()) {
+                arrG.inserta(rs.getString(2));
+            }
+            cbGrupo.setModel(new javax.swing.DefaultComboBoxModel() {
+                String[] strings = arrG.getArr();
+
+                @Override
+                public int getSize() {
+                    return strings.length;
+                }
+
+                @Override
+                public String getElementAt(int i) {
+                    return strings[i];
+                }
+            });
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        arrG.vaciarArr();
     }
 
     /**
@@ -134,7 +168,7 @@ public class InterfAltaEmp extends javax.swing.JFrame {
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel3.setText("Grupo de trabajo");
-        pnContainer.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, -1));
+        pnContainer.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, -1, -1));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel4.setText("Telefono");
@@ -165,12 +199,12 @@ public class InterfAltaEmp extends javax.swing.JFrame {
                 txtCorreoActionPerformed(evt);
             }
         });
-        pnContainer.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, 60, -1));
+        pnContainer.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, 100, -1));
         pnContainer.add(txtContrasenia, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 260, 120, -1));
 
         jLabel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel8.setText("@business.com");
-        pnContainer.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 260, -1, -1));
+        jLabel8.setText("@bn.com");
+        pnContainer.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, -1, -1));
 
         cbContraC.setEnabled(false);
         cbContraC.setOpaque(true);
@@ -184,6 +218,7 @@ public class InterfAltaEmp extends javax.swing.JFrame {
 
         pnValidar.setBackground(new java.awt.Color(204, 204, 204));
 
+        lbValidar.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbValidar.setText("Validar");
         lbValidar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -234,26 +269,28 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         String apellidos = txtApellidos.getText();
         String nombre = txtNombre.getText();
         String telefono = txtTelefono.getText();
-        int grupo = cbGrupo.getSelectedIndex();
-        int rol = cbRol.getSelectedIndex();
+        int grupo = cbGrupo.getSelectedIndex() + 1;
+        int rol = cbRol.getSelectedIndex() + 1;
         try {
-            
-            PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`empleado` (`Id_Empleado`, `Role`,`Apellidos`,`Nombre`,`Telefono`,`Usuario`,`Contraseña`,`Id_Grupo`)"
+
+            PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`empleado` ( `Role`,`Apellidos`,`Nombre`,`Telefono`,`Usuario`,`Contraseña`,`Id_Grupo`)"
                     + "Values (?,?,?,?,?,?,?,?)");
-            pps.setString(1, "4");
-            pps.setString(2, Integer.toString(rol));
-            pps.setString(3, apellidos);
-            pps.setString(4, nombre);
-            pps.setString(5, telefono);
-            pps.setString(6, correo);
-            pps.setString(7, contra);
-            pps.setString(8, Integer.toString(grupo));
+            pps.setString(1, Integer.toString(rol));
+            pps.setString(2, apellidos);
+            pps.setString(3, nombre);
+            pps.setString(4, telefono);
+            pps.setString(5, correo);
+            pps.setString(6, contra);
+            pps.setString(7, Integer.toString(grupo));
             pps.executeUpdate();
             txtCorreo.setText("");
             txtContrasenia.setText("");
             txtApellidos.setText("");
             txtNombre.setText("");
             txtTelefono.setText("");
+            cbGrupo.setSelectedIndex(0);
+            cbRol.setSelectedIndex(0);
+            JOptionPane.showMessageDialog(null, "Empleado registrado con exito.");
         } catch (SQLException ex) {
             Logger.getLogger(InterfAltaEmp.class.getName()).log(Level.SEVERE, null, ex);
         }
