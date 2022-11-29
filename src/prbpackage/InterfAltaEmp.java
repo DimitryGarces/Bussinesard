@@ -1,6 +1,6 @@
-
 package prbpackage;
 
+import java.awt.event.KeyEvent;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -157,6 +157,12 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel1.setText("Apellidos");
         pnContainer.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, -1, -1));
+
+        txtApellidos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtApellidosKeyPressed(evt);
+            }
+        });
         pnContainer.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 150, -1));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
@@ -188,7 +194,18 @@ public class InterfAltaEmp extends javax.swing.JFrame {
                 txtNombreActionPerformed(evt);
             }
         });
+        txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtNombreKeyPressed(evt);
+            }
+        });
         pnContainer.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 140, -1));
+
+        txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyPressed(evt);
+            }
+        });
         pnContainer.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 150, 130, -1));
 
         txtCorreo.addActionListener(new java.awt.event.ActionListener() {
@@ -196,7 +213,18 @@ public class InterfAltaEmp extends javax.swing.JFrame {
                 txtCorreoActionPerformed(evt);
             }
         });
+        txtCorreo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCorreoKeyPressed(evt);
+            }
+        });
         pnContainer.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, 100, -1));
+
+        txtContrasenia.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtContraseniaKeyPressed(evt);
+            }
+        });
         pnContainer.add(txtContrasenia, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 260, 120, -1));
 
         jLabel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -289,7 +317,7 @@ public class InterfAltaEmp extends javax.swing.JFrame {
             cbRol.setSelectedIndex(0);
             JOptionPane.showMessageDialog(null, "Empleado registrado con exito.");
         } catch (SQLException ex) {
-            Logger.getLogger(InterfAltaEmp.class.getName()).log(Level.SEVERE, null, ex);
+           JOptionPane.showMessageDialog(null, "Compruebe sus entradas y llene todos los campos.");
         }
 
         // TODO add your handling code here:
@@ -304,6 +332,41 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         this.dispose();
         // TODO add your handling code here:
     }//GEN-LAST:event_lbCancelarMouseClicked
+
+    private void txtApellidosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidosKeyPressed
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+            txtNombre.requestFocus();
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtApellidosKeyPressed
+
+    private void txtNombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyPressed
+
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+            txtTelefono.requestFocus();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNombreKeyPressed
+
+    private void txtTelefonoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyPressed
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+            txtCorreo.requestFocus();
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTelefonoKeyPressed
+
+    private void txtCorreoKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCorreoKeyPressed
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+            txtContrasenia.requestFocus();
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCorreoKeyPressed
+
+    private void txtContraseniaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseniaKeyPressed
+
+        if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
+            lbValidarMouseClicked(null);
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_txtContraseniaKeyPressed
 
     /**
      * @param args the command line arguments

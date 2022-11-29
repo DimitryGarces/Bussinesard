@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.logging.Level;
@@ -32,6 +33,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     Thread hiloA;
     private static int grupo = -1;
     int b = 0;
+    Notificacion not;
 
     /**
      * Creates new form InterfEmpleados
@@ -39,6 +41,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
      * @param con
      * @param nombre
      * @param rol
+     * @param grupo
      */
     public InterfEmpleados(Connection con, String nombre, String rol, int grupo) {
         initComponents();
@@ -46,6 +49,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         InterfEmpleados.nombreU = nombre;
         InterfEmpleados.rol = rol;
         InterfEmpleados.grupo = grupo;
+
         lbMsjBienvenida.setText("Hola de nuevo " + nombreU + " ! ");
         try {
             pintarImagen(lbRegistrar, "/imgspackage/registro.png");
@@ -78,6 +82,9 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                         } else if (b == 2) {
                             grupos();
 //                            System.out.println("Msj grupales Actualizados");
+                        }
+                        if (rol.contains("Administrador")) {
+                            validaReportes();
                         }
                     } catch (Exception exF) {
 
@@ -190,6 +197,35 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 lbGrupos.setVisible(false);
                 listGrupos.setVisible(false);
             }
+        }
+
+    }
+
+    public void validaReportes() {
+        sqlContactos = "SELECT Id_Auditoria,Id_Moderador,Id_EmpleadoR,Descripcion FROM bussinesscard.auditoria where"
+                + " Estado = 0;";
+        try {
+            if (not == null) {
+                st = con.createStatement();
+                ResultSet rs = st.executeQuery(sqlContactos);
+                rs.next();
+                String sql1 = "SELECT Nombre FROM bussinesscard.empleado where Id_Empleado = " + rs.getString(2);
+                String sql2 = "SELECT Nombre FROM bussinesscard.empleado where Id_Empleado = " + rs.getString(3);
+                Statement st1 = con.createStatement();
+                ResultSet rs1 = st1.executeQuery(sql1);
+                rs1.next();
+                String mod = rs1.getString(1);
+                rs1 = st.executeQuery(sql2);
+                rs1.next();
+                String emp = rs1.getString(1);
+                not = new Notificacion(mod, emp, rs.getString(4), rs.getString(1), con);
+                not.setVisible(true);
+            }
+            if(!not.isShowing()){
+                not=null;
+            }
+        } catch (SQLException ex) {
+
         }
 
     }
@@ -700,7 +736,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
     private void lbEmergenciaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbEmergenciaMouseClicked
 
-        InterfAuditorias aud = new InterfAuditorias(con,nombreU);
+        InterfAuditorias aud = new InterfAuditorias(con, nombreU);
         aud.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_lbEmergenciaMouseClicked
