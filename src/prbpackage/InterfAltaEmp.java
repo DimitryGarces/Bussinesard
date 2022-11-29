@@ -269,12 +269,12 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         String apellidos = txtApellidos.getText();
         String nombre = txtNombre.getText();
         String telefono = txtTelefono.getText();
-        int grupo = cbGrupo.getSelectedIndex() + 1;
-        int rol = cbRol.getSelectedIndex() + 1;
+        int grupo = cbGrupo.getSelectedIndex();
+        int rol = cbRol.getSelectedIndex();
         try {
 
             PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`empleado` ( `Role`,`Apellidos`,`Nombre`,`Telefono`,`Usuario`,`Contraseña`,`Id_Grupo`)"
-                    + "Values (?,?,?,?,?,?,?,?)");
+                    + "Values (?,?,?,?,?,?,?)");
             pps.setString(1, Integer.toString(rol));
             pps.setString(2, apellidos);
             pps.setString(3, nombre);

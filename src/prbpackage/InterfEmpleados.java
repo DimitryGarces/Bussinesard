@@ -155,9 +155,38 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             }
             arrG.vaciarArr();
         } else {
-            lbGrupos.setVisible(false);
-            listGrupos.setVisible(false);
+            try {
+                String grups = "Select NombreGrupo from bussinesscard.grupo INNER JOIN"
+                        + " bussinesscard.empleado on grupo.Id_Owner=empleado.Id_Empleado Where "
+                        + "Nombre LIKE \"" + nombreU + "\";";
+                st = con.createStatement();
+                ResultSet rs = st.executeQuery(grups);
+                while (rs.next()) {
+                    arrG.inserta(rs.getString(1));
+                }
+                if (!arrG.vacio()) {
+                    listGrupos.setVisible(true);
+                    listGrupos.setModel(new javax.swing.AbstractListModel<String>() {
+                        String[] strings = arrG.getArr();
+
+                        @Override
+                        public int getSize() {
+                            return strings.length;
+                        }
+
+                        @Override
+                        public String getElementAt(int i) {
+                            return strings[i];
+                        }
+                    });
+                    arrG.vaciarArr();
+                }
+            } catch (SQLException ex) {
+                lbGrupos.setVisible(false);
+                listGrupos.setVisible(false);
+            }
         }
+
     }
 
     private void pintarImagen(JLabel lbl, String ruta) {
@@ -299,9 +328,9 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addComponent(lbGrupos)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(87, 87, 87)
-                .addComponent(lbRecargar, javax.swing.GroupLayout.DEFAULT_SIZE, 12, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbRecargar, javax.swing.GroupLayout.DEFAULT_SIZE, 3, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -509,11 +538,13 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
                     } else {
                         arrM.inserta("De: " + rs2.getString(1) + "\tPara: " + rs3.getString(1) + "\t(" + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
+
                     }
 
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Login.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
             actualizaMensajes();
             arrM.vaciarArr();
@@ -589,7 +620,9 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Ups! Algo a salido mal.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 
-            Logger.getLogger(InterfAltaEmp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger
+                    .getLogger(InterfAltaEmp.class
+                            .getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_lbEnviarMouseClicked
@@ -678,9 +711,11 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                     ResultSet rs2 = st.executeQuery(origen);
                     rs2.next();
                     arrG.inserta("De: " + rs2.getString(1) + "\tPara: (Todos) \t" + rs.getString(4) + "\n");
+
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Login.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
             actualizaGrupos();
             arrG.vaciarArr();
