@@ -47,12 +47,17 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         InterfEmpleados.rol = rol;
         InterfEmpleados.grupo = grupo;
         lbMsjBienvenida.setText("Hola de nuevo " + nombreU + " ! ");
-        pintarImagen(lbRegistrar, "/imgspackage/registro.png");
-        pintarImagen(lbArchivo, "/imgspackage/Archivo.png");
-        pintarImagen(lbEnviar, "/imgspackage/Enviar.png");
-        pintarImagen(lbAltaGrupo, "/imgspackage/Grupos.png");
-        pintarImagen(lbCerrarSesion, "/imgspackage/CerrarSesion.png");
-        pintaRol();
+        try {
+            pintarImagen(lbRegistrar, "/imgspackage/registro.png");
+            pintarImagen(lbArchivo, "/imgspackage/Archivo.png");
+            pintarImagen(lbEnviar, "/imgspackage/Enviar.png");
+            pintarImagen(lbAltaGrupo, "/imgspackage/Grupos.png");
+            pintarImagen(lbCerrarSesion, "/imgspackage/CerrarSesion.png");
+            pintarImagen(lbEmergencia, "/imgspackage/Emergency.png");
+            pintaRol();
+        } catch (NullPointerException ex) {
+
+        }
         listMensajes.setVisible(false);
         lbM.setVisible(false);
         txtMensaje.setVisible(false);
@@ -208,16 +213,19 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             pintarImagen(lbDarBaja, "/imgspackage/BajaEmpleado.png");
             lbRegistrar.setVisible(true);
             lbDarBaja.setVisible(true);
+            lbEmergencia.setVisible(false);
         } else if (rol.contains("Moderador")) {
             pintarImagen(lbRol, "/imgspackage/Moderador.png");
             lbRegistrar.setVisible(false);
             lbDarBaja.setVisible(false);
             lbAltaGrupo.setVisible(false);
+            lbEmergencia.setVisible(true);
         } else {
             pintarImagen(lbRol, "/imgspackage/Empleado.png");
             lbRegistrar.setVisible(false);
             lbDarBaja.setVisible(false);
             lbAltaGrupo.setVisible(false);
+            lbEmergencia.setVisible(false);
         }
     }
 
@@ -250,6 +258,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         lbMsjBienvenida = new javax.swing.JLabel();
         lbDarBaja = new javax.swing.JLabel();
         lbAltaGrupo = new javax.swing.JLabel();
+        lbEmergencia = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Mensajes");
@@ -292,29 +301,25 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         pnContactosLayout.setHorizontalGroup(
             pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnContactosLayout.createSequentialGroup()
-                .addGroup(pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnContactosLayout.createSequentialGroup()
-                        .addGroup(pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnContactosLayout.createSequentialGroup()
-                                .addGap(38, 38, 38)
-                                .addComponent(lbRecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnContactosLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(lbGrupos))
-                            .addGroup(pnContactosLayout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addComponent(jLabel2))
-                            .addGroup(pnContactosLayout.createSequentialGroup()
-                                .addGap(44, 44, 44)
-                                .addComponent(lbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnContactosLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 6, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnContactosLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addGroup(pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(pnContactosLayout.createSequentialGroup()
+                            .addGap(38, 38, 38)
+                            .addComponent(lbRecargar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(pnContactosLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(lbGrupos))
+                        .addGroup(pnContactosLayout.createSequentialGroup()
+                            .addGap(22, 22, 22)
+                            .addComponent(jLabel2))
+                        .addGroup(pnContactosLayout.createSequentialGroup()
+                            .addGap(44, 44, 44)
+                            .addComponent(lbRol, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(pnContactosLayout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         pnContactosLayout.setVerticalGroup(
             pnContactosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -328,8 +333,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addComponent(lbGrupos)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(lbRecargar, javax.swing.GroupLayout.DEFAULT_SIZE, 3, Short.MAX_VALUE)
                 .addContainerGap())
         );
@@ -472,6 +477,13 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             }
         });
         pnContenedor.add(lbAltaGrupo, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 40, 80, 70));
+
+        lbEmergencia.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbEmergenciaMouseClicked(evt);
+            }
+        });
+        pnContenedor.add(lbEmergencia, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 40, 90, 70));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -685,6 +697,13 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         this.dispose();
         // TODO add your handling code here:
     }//GEN-LAST:event_lbCerrarSesionMouseClicked
+
+    private void lbEmergenciaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbEmergenciaMouseClicked
+
+        InterfAuditorias aud = new InterfAuditorias(con,nombreU);
+        aud.setVisible(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_lbEmergenciaMouseClicked
     private void grupos() {
         if (selected != null) {
             lbNombreChat.setText("Estas en chat grupal " + selected);
@@ -761,6 +780,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private javax.swing.JLabel lbArchivo;
     private javax.swing.JLabel lbCerrarSesion;
     private javax.swing.JLabel lbDarBaja;
+    private javax.swing.JLabel lbEmergencia;
     private javax.swing.JLabel lbEnviar;
     private javax.swing.JLabel lbGrupos;
     private javax.swing.JLabel lbM;

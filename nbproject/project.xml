@@ -6,7 +6,6 @@
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
             <name>BusinessCard</name>
             <source-roots>
-                <root id="src.imgspackage.dir"/>
                 <root id="src.dir"/>
             </source-roots>
             <test-roots>

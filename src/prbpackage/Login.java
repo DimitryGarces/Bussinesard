@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -63,11 +62,14 @@ public class Login extends javax.swing.JFrame {
 
     public Login() {
         initComponents();
-        pintarImagen(txtLogo, "/imgspackage/BusinessCard.png");
-        pintarImagen(lblIngresar, "/imgspackage/usuario.png");
-        pintarImagen(txtCerrar, "/imgspackage/Cerrar.png");
-        pintarImagen(lbFondoA, "/imgspackage/FondoA.png");
+        try {
+            pintarImagen(txtLogo, "/imgspackage/BusinessCard.png");
+            pintarImagen(lblIngresar, "/imgspackage/usuario.png");
+            pintarImagen(txtCerrar, "/imgspackage/cerrar.png");
+            pintarImagen(lbFondoA, "/imgspackage/FondoA.png");
+        } catch (NullPointerException ex) {
 
+        }
         lbErrorAux.setVisible(false);
         mayusAct = Toolkit.getDefaultToolkit().getLockingKeyState(KeyEvent.VK_CAPS_LOCK);
         lbBlockM2.setVisible(false);
@@ -79,11 +81,10 @@ public class Login extends javax.swing.JFrame {
         String c = obj.cargaC("Correo.dat");
         String co = obj.cargaC("Contra.dat");
         if (c != null) {
-            txtUsuario.setText("" + c);
-            txtContrasena.setText("" + co);
+            txtUsuario.setText(""+c);
+            txtContrasena.setText(""+co);
         }
 //        System.out.println(""+arr[0]);
-
         conector();
     }
 //txtLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imgspackage/BusinessCard.png")));
@@ -562,7 +563,7 @@ public class Login extends javax.swing.JFrame {
                     try {
                         grupo = Integer.parseInt(rs.getString(8));
                     } catch (Exception ex) {
-                        
+
                     }
                     return true;
                 }
