@@ -77,7 +77,7 @@ public class InterfAuditorias extends javax.swing.JFrame {
     }
 
     public void valida() {
-        sqlEmpleados = "Select Nombre from bussinesscard.empleado Where Nombre NOT LIKE  \"" + nombreU + "\";";
+        sqlEmpleados = "Select Nombre from bussinesscard.empleado Where Nombre NOT LIKE  \"" + nombreU + "\" AND Nombre NOT LIKE \"Grupo%\";";
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlEmpleados);
@@ -108,36 +108,43 @@ public class InterfAuditorias extends javax.swing.JFrame {
         sqlReportes = "Select Id_EmpleadoR,Descripcion,Estado from bussinesscard.auditoria"
                 + " INNER JOIN bussinesscard.empleado on auditoria.Id_Moderador=empleado.Id_Empleado Where Nombre"
                 + " LIKE  \"" + nombreU + "\";";
+        ResultSet rs = null;
+        String s = "", r = "", estatus = "";
         try {
             st = con.createStatement();
-            ResultSet rs = st.executeQuery(sqlReportes);
+            rs = st.executeQuery(sqlReportes);
             arrR.inserta("");
-
             while (rs.next()) {
+                s = rs.getString(1);
+                r = rs.getString(2);
+                estatus = rs.getString(3);
+                System.out.println(estatus);
                 String st = "";
-                if (rs.getString(3).equals("0")) {
-                    st += "Pendiente";
+                if (estatus.equals("1")) {
+                    st += "Verificado";
                 } else {
-                    st += "Verificada";
+                    st += "Pendiente";
                 }
-                arrR.inserta("Se solicito a: (" + rs.getString(1) + ") Razon: (" + rs.getString(2) + ") Estatus: " + st);
+                arrR.inserta("Se solicito a: (" + s + ") Razon: (" + r + ") Estatus: " + st);
             }
-            listSolicitudes.setModel(new javax.swing.DefaultComboBoxModel() {
-                String[] strings = arrR.getArr();
-
-                @Override
-                public int getSize() {
-                    return strings.length;
-                }
-
-                @Override
-                public String getElementAt(int i) {
-                    return strings[i];
-                }
-            });
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NullPointerException ex) {
+            arrR.inserta("Se solicito a: (" + s + ") Razon: (" + r + ") Estatus: Rechazada");
         }
+        listSolicitudes.setModel(new javax.swing.DefaultComboBoxModel() {
+            String[] strings = arrR.getArr();
+
+            @Override
+            public int getSize() {
+                return strings.length;
+            }
+
+            @Override
+            public String getElementAt(int i) {
+                return strings[i];
+            }
+        });
         arrR.vaciarArr();
     }
 
@@ -172,7 +179,7 @@ public class InterfAuditorias extends javax.swing.JFrame {
         lbEnviar = new javax.swing.JLabel();
         lbE = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         pnContainer.setBackground(new java.awt.Color(255, 255, 255));
         pnContainer.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -301,10 +308,14 @@ public class InterfAuditorias extends javax.swing.JFrame {
 
         } else {
             try {
+                String obtenId = "Select Id_Empleado from bussinesscard.empleado Where Nombre LIKE \"" + cbEm.getSelectedItem() + "\";";
+                st = con.createStatement();
+                ResultSet rs = st.executeQuery(obtenId);
+                rs.next();
                 PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`auditoria` ( `Id_Moderador`,`Id_EmpleadoR`,`Descripcion`,`Estado`)"
                         + "Values (?,?,?,?)");
                 pps.setString(1, id);
-                pps.setString(2, "" + cbEm.getSelectedIndex());
+                pps.setString(2, "" + rs.getString(1));
                 pps.setString(3, txtDescripcion.getText());
                 pps.setString(4, "0");
                 pps.executeUpdate();

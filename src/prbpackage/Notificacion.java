@@ -1,4 +1,3 @@
-
 package prbpackage;
 
 import java.awt.Image;
@@ -11,20 +10,20 @@ import javax.swing.JOptionPane;
 import org.mariadb.jdbc.Connection;
 import org.mariadb.jdbc.Statement;
 
-
 public class Notificacion extends javax.swing.JFrame {
 
     private ImageIcon imagen;
     private Icon icono;
-    static String mod="",emp="",razon="" ,sql = "", id="";
+    static String mod = "", emp = "", razon = "", sql = "", id = "";
     private static Connection con;
-    public Notificacion(String mod, String emp,String razon, String id,Connection con) {
+
+    public Notificacion(String mod, String emp, String razon, String id, Connection con) {
         initComponents();
-        this.mod=mod;
-        this.emp=mod;
-        this.razon=mod;
-        this.id=id;
-        this.con=con;
+        this.mod = mod;
+        this.emp = mod;
+        this.razon = mod;
+        this.id = id;
+        this.con = con;
         try {
             pintarImagen(lbAc, "/imgspackage/Acep.png");
             pintarImagen(lbN, "/imgspackage/Den.png");
@@ -32,13 +31,14 @@ public class Notificacion extends javax.swing.JFrame {
         } catch (NullPointerException ex) {
 
         }
-        lbEm.setText("El moderador "+mod+" solicita al empleado "+emp);
+        lbEm.setText("El moderador " + mod + " solicita al empleado " + emp);
         txtDes.setText(razon);
     }
 
-    public void muestra(){
-        
+    public void muestra() {
+
     }
+
     private void pintarImagen(JLabel lbl, String ruta) {
         this.imagen = new ImageIcon(getClass().getResource(ruta));
         this.icono = new ImageIcon(
@@ -51,6 +51,7 @@ public class Notificacion extends javax.swing.JFrame {
         lbl.setIcon(this.icono);
         this.repaint();
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -103,6 +104,12 @@ public class Notificacion extends javax.swing.JFrame {
             }
         });
 
+        lbN.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbNMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -112,21 +119,18 @@ public class Notificacion extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(lbEm))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lbEm)
+                            .addComponent(txtDes, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtDes, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(35, Short.MAX_VALUE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(86, 86, 86)
-                .addComponent(lbAc, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(59, 59, 59)
-                .addComponent(lbN, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(86, 86, 86)
+                        .addComponent(lbAc, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(59, 59, 59)
+                        .addComponent(lbN, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -163,7 +167,7 @@ public class Notificacion extends javax.swing.JFrame {
 
     private void lbAcMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAcMouseClicked
 
-        sql = "UPDATE auditoria SET estado=1 WHERE Id_Auditoria ="+id+";";
+        sql = "UPDATE auditoria SET estado=1 WHERE Id_Auditoria =" + id + ";";
         try {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
@@ -173,7 +177,17 @@ public class Notificacion extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_lbAcMouseClicked
 
-    
+    private void lbNMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbNMouseClicked
+        sql = "UPDATE auditoria SET estado=NULL WHERE Id_Auditoria =" + id + ";";
+        try {
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            JOptionPane.showMessageDialog(null, "Auditoria denegada correctamente.");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Ups Algo salio mal.");
+        }
+    }//GEN-LAST:event_lbNMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -204,7 +218,7 @@ public class Notificacion extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Notificacion(mod,emp,razon,id,con).setVisible(true);
+                new Notificacion(mod, emp, razon, id, con).setVisible(true);
             }
         });
     }

@@ -140,12 +140,23 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
     public void validaGrupos() {
         if (grupo != -1) {
+            String origenI = "";
             lbGrupos.setVisible(true);
             listGrupos.setVisible(true);
-            sqlContactos = "SELECT NombreGrupo FROM bussinesscard.grupo where Id_Grupo =" + grupo + ";";
+            String auxO = "SELECT Id_Empleado FROM empleado WHERE Nombre LIKE \"" + nombreU + "\"";
+            st = con.createStatement();
+            ResultSet rs;
+            try {
+                rs = st.executeQuery(auxO);
+                rs.next();
+                origenI = rs.getString(1);
+            } catch (SQLException ex) {
+
+            }
+            sqlContactos = "SELECT NombreGrupo FROM bussinesscard.grupo where Id_Grupo =" + grupo + " OR Id_Owner = " + origenI + ";";
             try {
                 st = con.createStatement();
-                ResultSet rs = st.executeQuery(sqlContactos);
+                rs = st.executeQuery(sqlContactos);
                 while (rs.next()) {
                     arrG.inserta(rs.getString(1));
                 }
@@ -221,8 +232,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 not = new Notificacion(mod, emp, rs.getString(4), rs.getString(1), con);
                 not.setVisible(true);
             }
-            if(!not.isShowing()){
-                not=null;
+            if (!not.isShowing()) {
+                not = null;
             }
         } catch (SQLException ex) {
 
@@ -585,8 +596,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                     if (rs2.getString(1).contains("Grupo")) {
 
                     } else {
-                        arrM.inserta("De: " + rs2.getString(1) + "\tPara: " + rs3.getString(1) + "\t(" + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
-
+                        arrM.inserta("De: " + rs2.getString(1) + "\tPara: " + rs3.getString(1) + "\t(" 
+                                + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
                     }
 
                 }
@@ -645,7 +656,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 } catch (SQLException ex) {
 
                 }
-            } else if (o.equals("") || d.equals("")) {
+            } else { 
                 String origen = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + nombreU + "\";";
                 String destino = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + selected + "\";";
                 ResultSet rs2 = st.executeQuery(origen);
@@ -710,7 +721,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     }//GEN-LAST:event_lbAltaGrupoMouseClicked
 
     private void listGruposMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listGruposMouseClicked
-
+        actualizaGrupos();
         b = 2;
         selected = listGrupos.getSelectedValue();
         listMensajes.setVisible(true);
@@ -745,10 +756,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             lbNombreChat.setText("Estas en chat grupal " + selected);
             try {
                 //Obtenemos el Id del Owner del grupo en el que estamos seleccionados actualmente
-                sqlMensajes = "SELECT Id_Empleado_D FROM bussinesscard.Mensaje"
-                        + " INNER JOIN bussinesscard.grupo on grupo.Id_Owner = mensaje.Id_Empleado_D where NombreGrupo LIKE"
-                        + "\"" + selected + "\"; ";
-
+                sqlMensajes = "SELECT Id_Empleado FROM bussinesscard.Empleado WHERE Nombre LIKE "
+                        + "\"Grupo " + selected + "\";";
                 st = con.createStatement();
                 ResultSet rs = st.executeQuery(sqlMensajes);
                 rs.next();
