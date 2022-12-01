@@ -94,8 +94,6 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         txtCorreo = new javax.swing.JTextField();
         txtContrasenia = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        cbContraC = new javax.swing.JCheckBox();
-        cbCorreoC = new javax.swing.JCheckBox();
         pnValidar = new javax.swing.JPanel();
         lbValidar = new javax.swing.JLabel();
 
@@ -122,6 +120,8 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         );
 
         pnContainer.add(pnContacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, 520, 50));
+
+        pnHead.setBackground(new java.awt.Color(255, 153, 0));
 
         txtEncabezado.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         txtEncabezado.setText("BUSINESSCARD");
@@ -156,18 +156,18 @@ public class InterfAltaEmp extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel1.setText("Apellidos");
-        pnContainer.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, -1, -1));
+        pnContainer.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, -1));
 
         txtApellidos.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtApellidosKeyPressed(evt);
             }
         });
-        pnContainer.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 70, 150, -1));
+        pnContainer.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 150, -1));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel2.setText("Nombre");
-        pnContainer.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 70, -1, -1));
+        pnContainer.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 80, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel3.setText("Grupo de trabajo");
@@ -179,11 +179,11 @@ public class InterfAltaEmp extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel5.setText("Correo");
-        pnContainer.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, -1, -1));
+        pnContainer.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel6.setText("Contraseña");
-        pnContainer.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 260, -1, -1));
+        pnContainer.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 260, -1, -1));
 
         jLabel7.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel7.setText("Rol de Empleado");
@@ -199,14 +199,14 @@ public class InterfAltaEmp extends javax.swing.JFrame {
                 txtNombreKeyPressed(evt);
             }
         });
-        pnContainer.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 70, 140, -1));
+        pnContainer.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 80, 140, -1));
 
         txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtTelefonoKeyPressed(evt);
             }
         });
-        pnContainer.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 150, 130, -1));
+        pnContainer.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 140, 140, -1));
 
         txtCorreo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -218,28 +218,18 @@ public class InterfAltaEmp extends javax.swing.JFrame {
                 txtCorreoKeyPressed(evt);
             }
         });
-        pnContainer.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 260, 100, -1));
+        pnContainer.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, 90, 20));
 
         txtContrasenia.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtContraseniaKeyPressed(evt);
             }
         });
-        pnContainer.add(txtContrasenia, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 260, 120, -1));
+        pnContainer.add(txtContrasenia, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 250, 140, -1));
 
         jLabel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel8.setText("@bn.com");
         pnContainer.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, -1, -1));
-
-        cbContraC.setEnabled(false);
-        cbContraC.setOpaque(true);
-        cbContraC.setRequestFocusEnabled(false);
-        pnContainer.add(cbContraC, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 260, -1, -1));
-
-        cbCorreoC.setEnabled(false);
-        cbCorreoC.setOpaque(true);
-        cbCorreoC.setRequestFocusEnabled(false);
-        pnContainer.add(cbCorreoC, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 260, -1, -1));
 
         pnValidar.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -405,8 +395,6 @@ public class InterfAltaEmp extends javax.swing.JFrame {
     private prbpackage.Combobox cbGrupo;
     private prbpackage.Combobox cbRol;
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox cbContraC;
-    private javax.swing.JCheckBox cbCorreoC;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

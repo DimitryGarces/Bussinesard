@@ -104,34 +104,42 @@ public class InterfAuditorias extends javax.swing.JFrame {
         arrE.vaciarArr();
     }
 
-    public void validaReportes() {
-        sqlReportes = "Select Id_EmpleadoR,Descripcion,Estado from bussinesscard.auditoria"
-                + " INNER JOIN bussinesscard.empleado on auditoria.Id_Moderador=empleado.Id_Empleado Where Nombre"
-                + " LIKE  \"" + nombreU + "\";";
-        ResultSet rs = null;
+    public ResultSet met(ResultSet rst) {
         String s = "", r = "", estatus = "";
         try {
-            st = con.createStatement();
-            rs = st.executeQuery(sqlReportes);
-            arrR.inserta("");
-            while (rs.next()) {
-                s = rs.getString(1);
-                r = rs.getString(2);
-                estatus = rs.getString(3);
-                System.out.println(estatus);
-                String st = "";
-                if (estatus.equals("1")) {
-                    st += "Verificado";
-                } else {
-                    st += "Pendiente";
-                }
-                arrR.inserta("Se solicito a: (" + s + ") Razon: (" + r + ") Estatus: " + st);
+            s = rst.getString(1);
+            r = rst.getString(2);
+            estatus = rst.getString(3);
+            String st = "";
+            if (estatus.equals("1")) {
+                st += "Verificado";
+            } else {
+                st += "Pendiente";
             }
+            arrR.inserta("Se solicito a: (" + s + ") Razon: (" + r + ") Estatus: " + st);
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NullPointerException ex) {
             arrR.inserta("Se solicito a: (" + s + ") Razon: (" + r + ") Estatus: Rechazada");
         }
+        return (rst);
+    }
+
+    public void validaReportes() {
+        sqlReportes = "Select Id_EmpleadoR,Descripcion,Estado from bussinesscard.auditoria"
+                + " INNER JOIN bussinesscard.empleado on auditoria.Id_Moderador=empleado.Id_Empleado Where Nombre"
+                + " LIKE  \"" + nombreU + "\";";
+        ResultSet rs = null;
+
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(sqlReportes);
+            while(rs.next()){
+                rs=met(rs);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        } 
         listSolicitudes.setModel(new javax.swing.DefaultComboBoxModel() {
             String[] strings = arrR.getArr();
 
@@ -183,6 +191,8 @@ public class InterfAuditorias extends javax.swing.JFrame {
 
         pnContainer.setBackground(new java.awt.Color(255, 255, 255));
         pnContainer.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        pnHead.setBackground(new java.awt.Color(255, 153, 0));
 
         txtEncabezado.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         txtEncabezado.setText("BUSINESSCARD");

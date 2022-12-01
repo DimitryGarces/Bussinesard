@@ -53,7 +53,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         lbMsjBienvenida.setText("Hola de nuevo " + nombreU + " ! ");
         try {
             pintarImagen(lbRegistrar, "/imgspackage/registro.png");
-            pintarImagen(lbArchivo, "/imgspackage/Archivo.png");
             pintarImagen(lbEnviar, "/imgspackage/Enviar.png");
             pintarImagen(lbAltaGrupo, "/imgspackage/Grupos.png");
             pintarImagen(lbCerrarSesion, "/imgspackage/CerrarSesion.png");
@@ -65,7 +64,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         listMensajes.setVisible(false);
         lbM.setVisible(false);
         txtMensaje.setVisible(false);
-        lbArchivo.setVisible(false);
         lbEnviar.setVisible(false);
         lbNombreChat.setVisible(false);
         hiloA = new Thread(new Runnable() {
@@ -293,7 +291,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         pnMensajes = new javax.swing.JPanel();
         txtMensaje = new javax.swing.JTextField();
         lbEnviar = new javax.swing.JLabel();
-        lbArchivo = new javax.swing.JLabel();
         lbM = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listMensajes = new javax.swing.JList<>();
@@ -409,13 +406,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             }
         });
 
-        lbArchivo.setOpaque(true);
-        lbArchivo.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                lbArchivoMouseClicked(evt);
-            }
-        });
-
         lbM.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lbM.setText("Mensaje");
 
@@ -436,14 +426,10 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                         .addComponent(lbM)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lbArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(52, 52, 52)
                         .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnMensajesLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(pnMensajesLayout.createSequentialGroup()
                 .addGap(55, 55, 55)
                 .addComponent(lbNombreChat, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -459,7 +445,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbArchivo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbM))
                 .addGap(27, 27, 27))
         );
@@ -562,7 +547,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         listMensajes.setVisible(true);
         lbM.setVisible(true);
         txtMensaje.setVisible(true);
-        lbArchivo.setVisible(true);
         lbEnviar.setVisible(true);
         lbNombreChat.setVisible(true);
         b = 1;
@@ -708,12 +692,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_lbDarBajaMouseClicked
 
-    private void lbArchivoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbArchivoMouseClicked
-        listContactosMouseClicked(null);
-        actualizaMensajes();
-        // TODO add your handling code here:
-    }//GEN-LAST:event_lbArchivoMouseClicked
-
     private void lbAltaGrupoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAltaGrupoMouseClicked
         InterfAltaGrupos grupos = new InterfAltaGrupos(con, nombreU);
         grupos.setVisible(true);
@@ -727,7 +705,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         listMensajes.setVisible(true);
         lbM.setVisible(true);
         txtMensaje.setVisible(true);
-        lbArchivo.setVisible(true);
         lbEnviar.setVisible(true);
         lbNombreChat.setVisible(true);
         grupos();
@@ -822,7 +799,6 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lbAltaGrupo;
-    private javax.swing.JLabel lbArchivo;
     private javax.swing.JLabel lbCerrarSesion;
     private javax.swing.JLabel lbDarBaja;
     private javax.swing.JLabel lbEmergencia;

@@ -80,6 +80,8 @@ public class InterfAltaGrupos extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
+        pnHead.setBackground(new java.awt.Color(255, 153, 0));
+
         txtEncabezado.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         txtEncabezado.setText("BUSINESSCARD");
 
