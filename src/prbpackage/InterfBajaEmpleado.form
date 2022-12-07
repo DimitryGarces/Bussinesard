@@ -244,7 +244,7 @@
         <Component class="javax.swing.JLabel" name="lbFondo">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="0" y="60" width="560" height="300"/>
+              <AbsoluteConstraints x="-30" y="60" width="560" height="300"/>
             </Constraint>
           </Constraints>
         </Component>

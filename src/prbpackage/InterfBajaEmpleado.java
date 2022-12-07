@@ -70,7 +70,8 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
     }
 
     public void valida() {
-        sqlListContactos = "SELECT Nombre FROM bussinesscard.empleado where Nombre NOT LIKE \"" + nombreU + "\";";
+        sqlListContactos = "SELECT Nombre FROM bussinesscard.empleado where Nombre NOT LIKE \"" + nombreU + "\" "
+                + " AND Nombre NOT LIKE \"Grupo%\";";
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlListContactos);
@@ -228,7 +229,7 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
         pnContainer.add(txtNom, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 160, 120, -1));
         pnContainer.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 230, 120, -1));
         pnContainer.add(txtRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 160, 150, -1));
-        pnContainer.add(lbFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 560, 300));
+        pnContainer.add(lbFondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(-30, 60, 560, 300));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -248,7 +249,11 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
     private void lbBotonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbBotonMouseClicked
         if (selected != null) {
             try {
+                String drop = "Delete from auditoria where Id_EmpleadoR = (SELECT Id_Empleado From empleado where Nombre LIKE \"" + selected + "\") OR Id_Moderador"
+                        + " = (SELECT Id_Empleado From empleado where Nombre LIKE \"" + selected + "\");";
                 String sql = "Delete from empleado where nombre like \"" + selected + "\"";
+                st = con.createStatement();
+                st.executeUpdate(drop);
                 st = con.createStatement();
                 st.executeUpdate(sql);
                 txtNom.setText("");
@@ -267,6 +272,7 @@ public class InterfBajaEmpleado extends javax.swing.JFrame {
         selected = lst.getSelectedValue();
         sqlContactos = "SELECT Apellidos,role.Nombre FROM bussinesscard.empleado INNER JOIN bussinesscard.role on"
                 + " empleado.role= role.id_role where empleado.nombre like \"" + selected + "\";";
+
         try {
             st = con.createStatement();
             ResultSet rs = st.executeQuery(sqlContactos);

@@ -2,6 +2,14 @@ package prbpackage;
 
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,8 +20,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.mariadb.jdbc.Connection;
 import org.mariadb.jdbc.Statement;
 
@@ -27,7 +37,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private Icon icono;
     private static Connection con;
     private static String nombreU = "", rol = "", o = "", d = "";
-    String sqlContactos = "", sqlMensajes = "", selected;
+    byte[] archivo = null;
+    String sqlContactos = "", sqlMensajes = "", selected, archivoRuta, archivoNombre;
     Statement st;
     private Arreglo arrC = new Arreglo(), arrM = new Arreglo(), arrG = new Arreglo();
     Thread hiloA;
@@ -54,6 +65,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         try {
             pintarImagen(lbRegistrar, "/imgspackage/registro.png");
             pintarImagen(lbEnviar, "/imgspackage/Enviar.png");
+            pintarImagen(lbArchivp, "/imgspackage/Archivo.png");
             pintarImagen(lbAltaGrupo, "/imgspackage/Grupos.png");
             pintarImagen(lbCerrarSesion, "/imgspackage/CerrarSesion.png");
             pintarImagen(lbEmergencia, "/imgspackage/Emergency.png");
@@ -65,6 +77,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         lbM.setVisible(false);
         txtMensaje.setVisible(false);
         lbEnviar.setVisible(false);
+        lbArchivp.setVisible(false);
         lbNombreChat.setVisible(false);
         hiloA = new Thread(new Runnable() {
             @Override
@@ -211,32 +224,33 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     }
 
     public void validaReportes() {
-        sqlContactos = "SELECT Id_Auditoria,Id_Moderador,Id_EmpleadoR,Descripcion FROM bussinesscard.auditoria where"
-                + " Estado = 0;";
-        try {
-            if (not == null) {
-                st = con.createStatement();
-                ResultSet rs = st.executeQuery(sqlContactos);
-                rs.next();
-                String sql1 = "SELECT Nombre FROM bussinesscard.empleado where Id_Empleado = " + rs.getString(2);
-                String sql2 = "SELECT Nombre FROM bussinesscard.empleado where Id_Empleado = " + rs.getString(3);
-                Statement st1 = con.createStatement();
-                ResultSet rs1 = st1.executeQuery(sql1);
-                rs1.next();
-                String mod = rs1.getString(1);
-                rs1 = st.executeQuery(sql2);
-                rs1.next();
-                String emp = rs1.getString(1);
-                not = new Notificacion(mod, emp, rs.getString(4), rs.getString(1), con);
-                not.setVisible(true);
-            }
-            if (!not.isShowing()) {
-                not = null;
-            }
-        } catch (SQLException ex) {
+        if (rol.equals("Administrador")) {
+            sqlContactos = "SELECT Id_Auditoria,Id_Moderador,Id_EmpleadoR,Descripcion FROM bussinesscard.auditoria where"
+                    + " Estado = 0;";
+            try {
+                if (not == null) {
+                    st = con.createStatement();
+                    ResultSet rs = st.executeQuery(sqlContactos);
+                    rs.next();
+                    String sql1 = "SELECT Nombre FROM bussinesscard.empleado where Id_Empleado = " + rs.getString(2);
+                    String sql2 = "SELECT Nombre FROM bussinesscard.empleado where Id_Empleado = " + rs.getString(3);
+                    Statement st1 = con.createStatement();
+                    ResultSet rs1 = st1.executeQuery(sql1);
+                    rs1.next();
+                    String mod = rs1.getString(1);
+                    rs1 = st.executeQuery(sql2);
+                    rs1.next();
+                    String emp = rs1.getString(1);
+                    not = new Notificacion(mod, emp, rs.getString(4), rs.getString(1), con);
+                    not.setVisible(true);
+                }
+                if (!not.isShowing()) {
+                    not = null;
+                }
+            } catch (SQLException ex) {
 
+            }
         }
-
     }
 
     private void pintarImagen(JLabel lbl, String ruta) {
@@ -253,13 +267,13 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     }
 
     public void pintaRol() {
-        if (rol.contains("Administrador")) {
+        if (getRol().contains("Administrador")) {
             pintarImagen(lbRol, "/imgspackage/Admin.png");
             pintarImagen(lbDarBaja, "/imgspackage/BajaEmpleado.png");
             lbRegistrar.setVisible(true);
             lbDarBaja.setVisible(true);
             lbEmergencia.setVisible(false);
-        } else if (rol.contains("Moderador")) {
+        } else if (getRol().contains("Moderador")) {
             pintarImagen(lbRol, "/imgspackage/Moderador.png");
             lbRegistrar.setVisible(false);
             lbDarBaja.setVisible(false);
@@ -291,6 +305,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         pnMensajes = new javax.swing.JPanel();
         txtMensaje = new javax.swing.JTextField();
         lbEnviar = new javax.swing.JLabel();
+        lbArchivp = new javax.swing.JLabel();
         lbM = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         listMensajes = new javax.swing.JList<>();
@@ -406,10 +421,21 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             }
         });
 
+        lbArchivp.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbArchivpMouseClicked(evt);
+            }
+        });
+
         lbM.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         lbM.setText("Mensaje");
 
         listMensajes.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        listMensajes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listMensajesMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(listMensajes);
 
         lbNombreChat.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
@@ -420,20 +446,23 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         pnMensajesLayout.setHorizontalGroup(
             pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnMensajesLayout.createSequentialGroup()
-                .addGap(45, 45, 45)
                 .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnMensajesLayout.createSequentialGroup()
-                        .addComponent(lbM)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(52, 52, 52)
-                        .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pnMensajesLayout.createSequentialGroup()
-                .addGap(55, 55, 55)
-                .addComponent(lbNombreChat, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(45, 45, 45)
+                        .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnMensajesLayout.createSequentialGroup()
+                                .addComponent(lbM)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lbArchivp, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 504, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnMensajesLayout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(lbNombreChat, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(13, 13, Short.MAX_VALUE))
         );
         pnMensajesLayout.setVerticalGroup(
             pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -442,10 +471,12 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
-                .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbM))
+                    .addGroup(pnMensajesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbM)
+                        .addComponent(lbArchivp, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(27, 27, 27))
         );
 
@@ -548,6 +579,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         lbM.setVisible(true);
         txtMensaje.setVisible(true);
         lbEnviar.setVisible(true);
+        lbArchivp.setVisible(true);
         lbNombreChat.setVisible(true);
         b = 1;
         mensajes();
@@ -557,11 +589,11 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         if (selected != null) {
             lbNombreChat.setText("Estas en chat con " + selected);
 
-            sqlMensajes = "SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre  FROM bussinesscard.Mensaje"
+            sqlMensajes = "SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre, NombreArch  FROM bussinesscard.Mensaje"
                     + " INNER JOIN bussinesscard.Empleado on Empleado.Id_Empleado = Mensaje.Id_Empleado_D WHERE Nombre LIKE  "
                     + "\"" + selected + "\" AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
                     + "WHERE Nombre LIKE \"" + nombreU + "\")"
-                    + "UNION SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre FROM bussinesscard.Mensaje"
+                    + "UNION SELECT Id_Empleado_O, Id_Empleado_D, Fecha, Mensaje, Ruta_Arch , Nombre, NombreArch FROM bussinesscard.Mensaje"
                     + " INNER JOIN bussinesscard.Empleado on Empleado.Id_Empleado = Mensaje.Id_Empleado_D WHERE Nombre LIKE  "
                     + "\"" + nombreU + "\" AND Mensaje.Id_Empleado_O IN (SELECT Id_Empleado From bussinesscard.Empleado "
                     + "WHERE Nombre LIKE \"" + selected + "\") ORDER BY Fecha ASC; ";
@@ -580,8 +612,17 @@ public final class InterfEmpleados extends javax.swing.JFrame {
                     if (rs2.getString(1).contains("Grupo")) {
 
                     } else {
-                        arrM.inserta("De: " + rs2.getString(1) + "\tPara: " + rs3.getString(1) + "\t(" 
-                                + rs.getString(3) + ")\t" + rs.getString(4) + "\n");
+
+                        if (rs.getString(7) != null) {
+                            if (rs.getString(4).length() > 0) {
+                                arrM.inserta("(" + rs.getString(3) + ")" + rs.getString(4));
+                                arrM.inserta("(" + rs.getString(3) + ")" + rs.getString(7));
+                            } else {
+                                arrM.inserta("(" + rs.getString(3) + ")" + rs.getString(7));
+                            }
+                        } else {
+                            arrM.inserta("(" + rs.getString(3) + ")" + rs.getString(4));
+                        }
                     }
 
                 }
@@ -592,6 +633,35 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             actualizaMensajes();
             arrM.vaciarArr();
         }
+    }
+
+    public void abrirArchivo(String archi) {
+        byte[] b = null;
+        st = con.createStatement();
+        ResultSet rs4;
+        try {
+            rs4 = st.executeQuery("SELECT Ruta_Arch FROM bussinesscard.Mensaje WHERE NombreArch = \"" + archi + "\";");
+            while (rs4.next()) {
+                b = rs4.getBytes(1);
+            }
+            InputStream bos = new ByteArrayInputStream(b);
+
+            int tamanoInput = bos.available();
+            byte[] datosArch = new byte[tamanoInput];
+            bos.read(datosArch, 0, tamanoInput);
+
+            OutputStream out = new FileOutputStream("C:\\Users\\Marco\\Downloads\\" + archi);
+            out.write(datosArch);
+            JOptionPane.showMessageDialog(this, "Archivo descargado en Descargas");
+            //abrir archivo
+            out.close();
+            bos.close();
+        } catch (SQLException ex) {
+
+        } catch (IOException ex) {
+            Logger.getLogger(InterfEmpleados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     public void actualizaMensajes() {
@@ -624,48 +694,63 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         String minuto = Integer.toString(fecha.get(Calendar.MINUTE));
         String seg = Integer.toString(fecha.get(Calendar.SECOND));
         String fechaF = ano + "-" + mes + "-" + dia + "-" + hora + "-" + minuto + "-" + seg;
-        try {
-            if (b == 2) {
-                sqlContactos = "SELECT Id_Owner FROM bussinesscard.grupo where NombreGrupo LIKE \"" + selected + "\";";
-                String origen = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + nombreU + "\";";
-                try {
-                    ResultSet rs2 = st.executeQuery(origen);
-                    rs2.next();
-                    o = rs2.getString(1);
-                    st = con.createStatement();
-                    ResultSet rs = st.executeQuery(sqlContactos);
-                    while (rs.next()) {
-                        d = rs.getString(1);
+        if (archivoNombre.length() > 0 || txtMensaje.getText().length() > 0) {
+            try {
+                if (b == 2) {
+                    sqlContactos = "SELECT Id_Empleado FROM bussinesscard.empleado where Nombre LIKE \"Grupo " + selected + "\";";
+                    String origen = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + nombreU + "\";";
+                    try {
+                        ResultSet rs2 = st.executeQuery(origen);
+                        rs2.next();
+                        o = rs2.getString(1);
+                        st = con.createStatement();
+                        ResultSet rs = st.executeQuery(sqlContactos);
+                        while (rs.next()) {
+                            d = rs.getString(1);
+                        }
+                    } catch (SQLException ex) {
+
                     }
-                } catch (SQLException ex) {
-
+                } else {
+                    String origen = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + nombreU + "\";";
+                    String destino = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + selected + "\";";
+                    ResultSet rs2 = st.executeQuery(origen);
+                    ResultSet rs3 = st.executeQuery(destino);
+                    rs2.next();
+                    rs3.next();
+                    o = rs2.getString(1);
+                    d = rs3.getString(1);
                 }
-            } else { 
-                String origen = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + nombreU + "\";";
-                String destino = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + selected + "\";";
-                ResultSet rs2 = st.executeQuery(origen);
-                ResultSet rs3 = st.executeQuery(destino);
-                rs2.next();
-                rs3.next();
-                o = rs2.getString(1);
-                d = rs3.getString(1);
-            }
-            PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`mensaje` (`Id_Empleado_O`,`Id_Empleado_D`,`Fecha`,`Mensaje`,`Ruta_Arch`)"
-                    + "Values (?,?,?,?,?)");
-            pps.setString(1, o);
-            pps.setString(2, d);
-            pps.setString(3, fechaF);
-            pps.setString(4, txtMensaje.getText());
-            pps.setString(5, "");
-            pps.executeUpdate();
-            txtMensaje.setText("");
-            //JOptionPane.showMessageDialog(null, "Enviado!");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Ups! Algo a salido mal.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                File ruta = new File(archivoRuta);
+                if (archivoRuta.trim().length() != 0) {
+                    archivo = new byte[(int) ruta.length()];
+                    InputStream input = new FileInputStream(ruta);
+                    input.read(archivo);
+                }
+                PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`mensaje` (`Id_Empleado_O`,`Id_Empleado_D`,`Fecha`,`Mensaje`,`Ruta_Arch`,`NombreArch`)"
+                        + "Values (?,?,?,?,?,?)");
+                pps.setString(1, o);
+                pps.setString(2, d);
+                pps.setString(3, fechaF);
+                pps.setString(4, txtMensaje.getText());
+                pps.setBytes(5, archivo);
+                pps.setString(6, archivoNombre);
+                pps.executeUpdate();
+                txtMensaje.setText("");
+                //JOptionPane.showMessageDialog(null, "Enviado!");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Ups! Algo a salido mal.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 
-            Logger
-                    .getLogger(InterfAltaEmp.class
-                            .getName()).log(Level.SEVERE, null, ex);
+                Logger
+                        .getLogger(InterfAltaEmp.class
+                                .getName()).log(Level.SEVERE, null, ex);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(InterfEmpleados.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(InterfEmpleados.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            archivo = null;
+            archivoRuta = "";
         }
 
     }//GEN-LAST:event_lbEnviarMouseClicked
@@ -687,7 +772,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
 
     private void lbDarBajaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbDarBajaMouseClicked
 
-        InterfBajaEmpleado baja = new InterfBajaEmpleado(con, nombreU, rol);
+        InterfBajaEmpleado baja = new InterfBajaEmpleado(con, nombreU, getRol());
         baja.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_lbDarBajaMouseClicked
@@ -706,6 +791,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         lbM.setVisible(true);
         txtMensaje.setVisible(true);
         lbEnviar.setVisible(true);
+        lbArchivp.setVisible(true);
         lbNombreChat.setVisible(true);
         grupos();
     }//GEN-LAST:event_listGruposMouseClicked
@@ -715,7 +801,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     }//GEN-LAST:event_lbCerrarSesionKeyPressed
 
     private void lbCerrarSesionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbCerrarSesionMouseClicked
-
+        nombreU = "";
+        rol = "";
         Login log = new Login();
         log.setVisible(true);
         this.dispose();
@@ -728,6 +815,19 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         aud.setVisible(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_lbEmergenciaMouseClicked
+
+    private void lbArchivpMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbArchivpMouseClicked
+        seleccionarArchivo();
+    }//GEN-LAST:event_lbArchivpMouseClicked
+
+    private void listMensajesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listMensajesMouseClicked
+        try {
+            String archi = listMensajes.getSelectedValue().substring(21);
+            abrirArchivo(archi);
+        } catch(NullPointerException ex){
+            System.out.println(ex);
+        }
+    }//GEN-LAST:event_listMensajesMouseClicked
     private void grupos() {
         if (selected != null) {
             lbNombreChat.setText("Estas en chat grupal " + selected);
@@ -787,7 +887,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new InterfEmpleados(con, nombreU, rol, grupo).setVisible(true);
+                new InterfEmpleados(con, nombreU, getRol(), grupo).setVisible(true);
             }
         });
     }
@@ -799,6 +899,7 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel lbAltaGrupo;
+    private javax.swing.JLabel lbArchivp;
     private javax.swing.JLabel lbCerrarSesion;
     private javax.swing.JLabel lbDarBaja;
     private javax.swing.JLabel lbEmergencia;
@@ -820,5 +921,24 @@ public final class InterfEmpleados extends javax.swing.JFrame {
     private javax.swing.JLabel txtEncabezado;
     private javax.swing.JTextField txtMensaje;
     // End of variables declaration//GEN-END:variables
+
+    /**
+     * @return the rol
+     */
+    public static String getRol() {
+        return rol;
+    }
+
+    private void seleccionarArchivo() {
+        JFileChooser arch = new JFileChooser();
+        FileNameExtensionFilter fi = new FileNameExtensionFilter("Archivos", "pdf", "docx", "pptx", "xlsx");
+        arch.setFileFilter(fi);
+        int se = arch.showOpenDialog(this);
+        if (se == 0) {
+            archivoRuta = arch.getSelectedFile().getAbsolutePath();
+            archivoNombre = arch.getSelectedFile().getName();
+        } else {
+        }
+    }
 
 }

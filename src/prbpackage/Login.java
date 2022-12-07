@@ -29,7 +29,7 @@ public class Login extends javax.swing.JFrame {
     private static final String driver = "org.mariadb.jdbc.Driver";
     private static final String user = "root";
     private static final String pass = "root";
-    private static final String url = "jdbc:mariadb://localhost:3305/bussinesscard";
+    private static final String url = "jdbc:mariadb://prueba:3305/bussinesscard";
 
     String sql = "Select Id_Empleado,role.nombre, Apellidos,empleado.Nombre,Telefono,Usuario,Contraseña,Id_Grupo from bussinesscard.empleado "
             + "Inner Join bussinesscard.role on Empleado.Role=Role.Id_Role", nombreU = "", error = "", rol = "";
@@ -431,6 +431,31 @@ public class Login extends javax.swing.JFrame {
             if (cbSalvarContra.isSelected()) {
                 obj.guardaC("Correo.dat", correo);
                 obj.guardaC("Contra.dat", contra);
+            }
+            String aux = "SELECT Role FROM empleado WHERE Nombre LIKE \"" + nombreU + "\"";
+            st = con.createStatement();
+            ResultSet rs;
+            try {
+                rs = st.executeQuery(aux);
+                rs.next();
+                switch (rs.getString(1)) {
+                    case "1":
+                        rol = "Administrador";
+                        break;
+                    case "2":
+                        rol="Moderador";
+                        break;
+                    case "3":
+                        rol = "Empleado";
+                        break;
+                    case "5":
+                        rol = "Grupo";
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+            } catch (SQLException ex) {
+
             }
             InterfEmpleados interf = new InterfEmpleados(con, nombreU, rol, grupo);
             interf.setVisible(true);

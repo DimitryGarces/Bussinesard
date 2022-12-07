@@ -20,8 +20,8 @@ public class Notificacion extends javax.swing.JFrame {
     public Notificacion(String mod, String emp, String razon, String id, Connection con) {
         initComponents();
         this.mod = mod;
-        this.emp = mod;
-        this.razon = mod;
+        this.emp = emp;
+        this.razon = razon;
         this.id = id;
         this.con = con;
         try {
@@ -158,11 +158,11 @@ public class Notificacion extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -179,6 +179,7 @@ public class Notificacion extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Ups Algo salio mal.");
         }
+        this.setVisible(false);
     }//GEN-LAST:event_lbAcMouseClicked
 
     private void lbNMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbNMouseClicked
@@ -190,6 +191,7 @@ public class Notificacion extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Ups Algo salio mal.");
         }
+        this.setVisible(false);
     }//GEN-LAST:event_lbNMouseClicked
 
     /**
@@ -218,13 +220,16 @@ public class Notificacion extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Notificacion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        if (InterfEmpleados.getRol().equals("Administrador")) {
+            System.out.println(InterfEmpleados.getRol());
+            /* Create and display the form */
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                public void run() {
+                    new Notificacion(mod, emp, razon, id, con).setVisible(true);
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Notificacion(mod, emp, razon, id, con).setVisible(true);
-            }
-        });
+                }
+            });
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
