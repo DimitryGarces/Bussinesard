@@ -661,6 +661,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(InterfEmpleados.class.getName()).log(Level.SEVERE, null, ex);
         }
+        archivo = null;
+        archivoRuta = "";
 
     }
 
@@ -752,6 +754,8 @@ public final class InterfEmpleados extends javax.swing.JFrame {
             archivo = null;
             archivoRuta = "";
         }
+        archivo = null;
+        archivoRuta = "";
 
     }//GEN-LAST:event_lbEnviarMouseClicked
 
@@ -824,9 +828,11 @@ public final class InterfEmpleados extends javax.swing.JFrame {
         try {
             String archi = listMensajes.getSelectedValue().substring(21);
             abrirArchivo(archi);
-        } catch(NullPointerException ex){
+        } catch (NullPointerException ex) {
             System.out.println(ex);
         }
+        archivo = null;
+        archivoRuta = "";
     }//GEN-LAST:event_listMensajesMouseClicked
     private void grupos() {
         if (selected != null) {
