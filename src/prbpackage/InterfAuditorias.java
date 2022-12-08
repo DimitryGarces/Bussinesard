@@ -83,6 +83,7 @@ public class InterfAuditorias extends javax.swing.JFrame {
             ResultSet rs = st.executeQuery(sqlEmpleados);
             arrE.inserta("");
             while (rs.next()) {
+                System.out.println(rs.getString(1));
                 arrE.inserta(rs.getString(1));
             }
             cbEm.setModel(new javax.swing.DefaultComboBoxModel() {
@@ -130,16 +131,15 @@ public class InterfAuditorias extends javax.swing.JFrame {
                 + " INNER JOIN bussinesscard.empleado on auditoria.Id_Moderador=empleado.Id_Empleado Where Nombre"
                 + " LIKE  \"" + nombreU + "\";";
         ResultSet rs = null;
-
         try {
             st = con.createStatement();
             rs = st.executeQuery(sqlReportes);
-            while(rs.next()){
-                rs=met(rs);
+            while (rs.next()) {
+                rs = met(rs);
             }
         } catch (SQLException ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
         listSolicitudes.setModel(new javax.swing.DefaultComboBoxModel() {
             String[] strings = arrR.getArr();
 

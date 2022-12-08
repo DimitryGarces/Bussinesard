@@ -30,14 +30,16 @@ public class InterfAltaEmp extends javax.swing.JFrame {
     public InterfAltaEmp(Connection con) {
         initComponents();
         this.con = con;
-        cbGrupo = new prbpackage.Combobox();
+//        cbGrupo = new prbpackage.Combobox();
 //        cbGrupo.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"", "Alfa", "Beta", "Foxtron"}));
         valida();
-        cbRol = new prbpackage.Combobox();
+//        cbRol = new prbpackage.Combobox();
         cbRol.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"", "Administrador", "Moderador", "Empleado"}));
-
-        this.pnContainer.add(cbGrupo, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 120, -1, -1));
-        this.pnContainer.add(cbRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 180, -1, -1));
+//
+//        this.panelDatos.add(cbGrupo, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 160, -1, -1));
+//        cbGrupo.setSize(50, 22);
+//        this.panelDatos.add(cbRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 190, -1, -1));
+//        cbRol.setSize(50, 22);
     }
 
     public void valida() {
@@ -81,21 +83,23 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         pnHead = new javax.swing.JPanel();
         txtEncabezado = new javax.swing.JLabel();
         lbCancelar = new javax.swing.JLabel();
+        panelDatos = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        txtNombre = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         txtApellidos = new javax.swing.JTextField();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        txtNombre = new javax.swing.JTextField();
         txtTelefono = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         txtCorreo = new javax.swing.JTextField();
         txtContrasenia = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         pnValidar = new javax.swing.JPanel();
         lbValidar = new javax.swing.JLabel();
+        cbGrupo = new javax.swing.JComboBox<>();
+        cbRol = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Registrar");
@@ -112,20 +116,21 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         pnContacto.setLayout(pnContactoLayout);
         pnContactoLayout.setHorizontalGroup(
             pnContactoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 520, Short.MAX_VALUE)
+            .addGap(0, 440, Short.MAX_VALUE)
         );
         pnContactoLayout.setVerticalGroup(
             pnContactoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
+            .addGap(0, 30, Short.MAX_VALUE)
         );
 
-        pnContainer.add(pnContacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, 520, 50));
+        pnContainer.add(pnContacto, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 440, 30));
 
         pnHead.setBackground(new java.awt.Color(255, 153, 0));
 
         txtEncabezado.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         txtEncabezado.setText("BUSINESSCARD");
 
+        lbCancelar.setBackground(new java.awt.Color(255, 255, 255));
         lbCancelar.setText("Cancelar");
         lbCancelar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -139,8 +144,9 @@ public class InterfAltaEmp extends javax.swing.JFrame {
             pnHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnHeadLayout.createSequentialGroup()
                 .addComponent(txtEncabezado, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 210, Short.MAX_VALUE)
-                .addComponent(lbCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(101, 101, 101)
+                .addComponent(lbCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         pnHeadLayout.setVerticalGroup(
             pnHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -152,42 +158,12 @@ public class InterfAltaEmp extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        pnContainer.add(pnHead, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 520, 50));
+        pnContainer.add(pnHead, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 440, 50));
 
-        jLabel1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel1.setText("Apellidos");
-        pnContainer.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 80, -1, -1));
-
-        txtApellidos.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                txtApellidosKeyPressed(evt);
-            }
-        });
-        pnContainer.add(txtApellidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 80, 150, -1));
+        panelDatos.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         jLabel2.setText("Nombre");
-        pnContainer.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 80, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel3.setText("Grupo de trabajo");
-        pnContainer.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, -1, -1));
-
-        jLabel4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel4.setText("Telefono");
-        pnContainer.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 150, -1, -1));
-
-        jLabel5.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel5.setText("Correo");
-        pnContainer.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 260, -1, -1));
-
-        jLabel6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel6.setText("Contraseña");
-        pnContainer.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 260, -1, -1));
-
-        jLabel7.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        jLabel7.setText("Rol de Empleado");
-        pnContainer.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, -1, -1));
 
         txtNombre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,15 +174,43 @@ public class InterfAltaEmp extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtNombreKeyPressed(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNombreKeyTyped(evt);
+            }
         });
-        pnContainer.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 80, 140, -1));
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel1.setText("Apellidos");
+
+        txtApellidos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtApellidosKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtApellidosKeyTyped(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel3.setText("Grupo de trabajo");
+
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel4.setText("Telefono");
 
         txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtTelefonoKeyPressed(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTelefonoKeyTyped(evt);
+            }
         });
-        pnContainer.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 140, 140, -1));
+
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel6.setText("Contraseña");
+
+        jLabel5.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel5.setText("Usuario");
 
         txtCorreo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -217,19 +221,22 @@ public class InterfAltaEmp extends javax.swing.JFrame {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtCorreoKeyPressed(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCorreoKeyTyped(evt);
+            }
         });
-        pnContainer.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, 90, 20));
 
         txtContrasenia.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtContraseniaKeyPressed(evt);
             }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtContraseniaKeyTyped(evt);
+            }
         });
-        pnContainer.add(txtContrasenia, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 250, 140, -1));
 
-        jLabel8.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
-        jLabel8.setText("@bn.com");
-        pnContainer.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 260, -1, -1));
+        jLabel7.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
+        jLabel7.setText("Rol de Empleado");
 
         pnValidar.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -245,24 +252,108 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         pnValidar.setLayout(pnValidarLayout);
         pnValidarLayout.setHorizontalGroup(
             pnValidarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lbValidar, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnValidarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbValidar, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnValidarLayout.setVerticalGroup(
             pnValidarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(lbValidar, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
         );
 
-        pnContainer.add(pnValidar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 300, 110, 30));
+        javax.swing.GroupLayout panelDatosLayout = new javax.swing.GroupLayout(panelDatos);
+        panelDatos.setLayout(panelDatosLayout);
+        panelDatosLayout.setHorizontalGroup(
+            panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDatosLayout.createSequentialGroup()
+                .addGap(91, 91, 91)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDatosLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelDatosLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbRol, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelDatosLayout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelDatosLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbGrupo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelDatosLayout.createSequentialGroup()
+                        .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(9, 9, 9)
+                        .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtApellidos)
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelDatosLayout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pnValidar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(106, Short.MAX_VALUE))
+        );
+        panelDatosLayout.setVerticalGroup(
+            panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDatosLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtApellidos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(cbGrupo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(cbRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelDatosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtContrasenia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addComponent(pnValidar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+
+        pnContainer.add(panelDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 440, 310));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(pnContainer, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(pnContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -278,7 +369,6 @@ public class InterfAltaEmp extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCorreoActionPerformed
 
     private void lbValidarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbValidarMouseClicked
-
         String correo = txtCorreo.getText();
         String contra = txtContrasenia.getText();
         String apellidos = txtApellidos.getText();
@@ -286,30 +376,32 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         String telefono = txtTelefono.getText();
         int grupo = cbGrupo.getSelectedIndex();
         int rol = cbRol.getSelectedIndex();
-        try {
-
-            PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`empleado` ( `Role`,`Apellidos`,`Nombre`,`Telefono`,`Usuario`,`Contraseña`,`Id_Grupo`)"
-                    + "Values (?,?,?,?,?,?,?)");
-            pps.setString(1, Integer.toString(rol));
-            pps.setString(2, apellidos);
-            pps.setString(3, nombre);
-            pps.setString(4, telefono);
-            pps.setString(5, correo);
-            pps.setString(6, contra);
-            pps.setString(7, Integer.toString(grupo));
-            pps.executeUpdate();
-            txtCorreo.setText("");
-            txtContrasenia.setText("");
-            txtApellidos.setText("");
-            txtNombre.setText("");
-            txtTelefono.setText("");
-            cbGrupo.setSelectedIndex(0);
-            cbRol.setSelectedIndex(0);
-            JOptionPane.showMessageDialog(null, "Empleado registrado con exito.");
-        } catch (SQLException ex) {
-           JOptionPane.showMessageDialog(null, "Compruebe sus entradas y llene todos los campos.");
+        if (correo.length() > 0 && contra.length() > 0 && apellidos.length() > 0 && nombre.length() > 0 && telefono.length() == 10) {
+            try {
+                PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`empleado` ( `Role`,`Apellidos`,`Nombre`,`Telefono`,`Usuario`,`Contraseña`,`Id_Grupo`)"
+                        + "Values (?,?,?,?,?,?,?)");
+                pps.setString(1, Integer.toString(rol));
+                pps.setString(2, apellidos);
+                pps.setString(3, nombre);
+                pps.setString(4, telefono);
+                pps.setString(5, correo);
+                pps.setString(6, contra);
+                pps.setString(7, Integer.toString(grupo));
+                pps.executeUpdate();
+                txtCorreo.setText("");
+                txtContrasenia.setText("");
+                txtApellidos.setText("");
+                txtNombre.setText("");
+                txtTelefono.setText("");
+                cbGrupo.setSelectedIndex(0);
+                cbRol.setSelectedIndex(0);
+                JOptionPane.showMessageDialog(null, "Empleado registrado con exito.");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Nombre de usuario en uso");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Compruebe los datos y llene todos los campos.");
         }
-
         // TODO add your handling code here:
     }//GEN-LAST:event_lbValidarMouseClicked
 
@@ -327,7 +419,6 @@ public class InterfAltaEmp extends javax.swing.JFrame {
         if (evt.getExtendedKeyCode() == KeyEvent.VK_ENTER) {
             txtNombre.requestFocus();
         }
-        // TODO add your handling code here:
     }//GEN-LAST:event_txtApellidosKeyPressed
 
     private void txtNombreKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyPressed
@@ -357,6 +448,55 @@ public class InterfAltaEmp extends javax.swing.JFrame {
             lbValidarMouseClicked(null);
         }        // TODO add your handling code here:
     }//GEN-LAST:event_txtContraseniaKeyPressed
+
+    private void txtTelefonoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyTyped
+        int key = evt.getKeyChar();
+        boolean numeros = (key >= 48 && key <= 57);
+        if (!numeros) {
+            evt.consume();
+        }
+        if (txtTelefono.getText().length() >= 10) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtTelefonoKeyTyped
+
+    private void txtApellidosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidosKeyTyped
+        int key = evt.getKeyChar();
+        boolean mayusculas = key >= 65 && key <= 90;
+        boolean minuscilas = key >= 97 && key <= 122;
+        boolean espacio = key == 32;
+        if (!(minuscilas || mayusculas || espacio)) {
+            evt.consume();
+        }
+        if (txtApellidos.getText().length() >= 30) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtApellidosKeyTyped
+
+    private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
+        int key = evt.getKeyChar();
+        boolean mayusculas = key >= 65 && key <= 90;
+        boolean minuscilas = key >= 97 && key <= 122;
+        boolean espacio = key == 32;
+        if (!(minuscilas || mayusculas || espacio)) {
+            evt.consume();
+        }
+        if (txtNombre.getText().length() >= 30) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNombreKeyTyped
+
+    private void txtCorreoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCorreoKeyTyped
+        if (txtApellidos.getText().length() >= 30) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtCorreoKeyTyped
+
+    private void txtContraseniaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtContraseniaKeyTyped
+        if (txtApellidos.getText().length() >= 30) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtContraseniaKeyTyped
 
     /**
      * @param args the command line arguments
@@ -392,9 +532,10 @@ public class InterfAltaEmp extends javax.swing.JFrame {
             }
         });
     }
-    private prbpackage.Combobox cbGrupo;
-    private prbpackage.Combobox cbRol;
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> cbGrupo;
+    private javax.swing.JComboBox<String> cbRol;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -402,9 +543,9 @@ public class InterfAltaEmp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel lbCancelar;
     private javax.swing.JLabel lbValidar;
+    private javax.swing.JPanel panelDatos;
     private javax.swing.JPanel pnContacto;
     private javax.swing.JPanel pnContainer;
     private javax.swing.JPanel pnHead;

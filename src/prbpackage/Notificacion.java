@@ -1,14 +1,18 @@
 package prbpackage;
 
 import java.awt.Image;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import org.mariadb.jdbc.Connection;
 import org.mariadb.jdbc.Statement;
+import org.mariadb.jdbc.client.result.ResultSetMetaData;
 
 public class Notificacion extends javax.swing.JFrame {
 
@@ -170,12 +174,33 @@ public class Notificacion extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lbAcMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAcMouseClicked
-
+        Calendar fecha = new GregorianCalendar();
+        String ano = Integer.toString(fecha.get(Calendar.YEAR));
+        String mes = Integer.toString(fecha.get(Calendar.MONTH) + 1);
+        String dia = Integer.toString(fecha.get(Calendar.DAY_OF_MONTH));
+        String hora = Integer.toString(fecha.get(Calendar.HOUR_OF_DAY));
+        String minuto = Integer.toString(fecha.get(Calendar.MINUTE));
+        String seg = Integer.toString(fecha.get(Calendar.SECOND));
+        String fechaF = ano + "-" + mes + "-" + dia + "-" + hora + "-" + minuto + "-" + seg;
         sql = "UPDATE auditoria SET estado=1 WHERE Id_Auditoria =" + id + ";";
         try {
             Statement st = con.createStatement();
             ResultSet rs = st.executeQuery(sql);
             JOptionPane.showMessageDialog(null, "Auditoria aprobada correctamente.");
+            String sqlModerador = "SELECT Id_Empleado FROM Empleado WHERE Nombre LIKE \"" + mod + "\";";
+            ResultSet rs2 = st.executeQuery(sqlModerador);
+            rs2.next();
+            ResultSet rs3 = st.executeQuery("SELECT Telefono FROM Empleado WHERE Nombre LIKE \"" + emp + "\";");
+            rs3.next();
+//            String sqlMensaje = "INSERT INTO Mensaje (`Id_Empleado_O`, `Id_Empleado_D`,`Fecha`,`Mensaje`) VALUES"
+//                    + "(1," + rs2.getString(1) + "," + (String) fechaF + ",\"El contacto del empleado solicitado es: " + rs3.getString(1) + "\");";
+            PreparedStatement pps = con.prepareStatement("Insert into `bussinesscard`.`mensaje` (`Id_Empleado_O`,`Id_Empleado_D`,`Fecha`,`Mensaje`)"
+                    + "Values (?,?,?,?)");
+            pps.setString(1, "1");
+            pps.setString(2, rs2.getString(1));
+            pps.setString(3, fechaF);
+            pps.setString(4, "El contacto del empleado solicitado es: " + rs3.getString(1));
+            pps.executeUpdate();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Ups Algo salio mal.");
         }
